@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智学助手 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .assistant-search {
+            max-width: 1040px;
+            margin: 0 auto 24px;
+            min-height: 520px;
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+        .assistant-search .search-box input {
+            padding: 22px 26px 22px 60px;
+            font-size: 19px;
+            border-radius: 36px;
+        }
+        .assistant-search .search-box i { font-size: 20px; }
+        .assistant-actions { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 40px; }
+        .assistant-action { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 32px; background: var(--bg-card); border-radius: 18px; border: 2px solid var(--border); cursor: pointer; transition: all 0.3s; }
+        .assistant-action:hover { border-color: var(--primary); color: var(--primary); }
+        .assistant-action i { font-size: 32px; }
+        .result-section { margin-bottom: 24px; }
+        .result-section h3 { font-size: 16px; margin-bottom: 12px; color: var(--text); }
+        .wiki-card { background: linear-gradient(135deg, #f0f4ff, #e8eeff); border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 1px solid rgba(79,70,229,0.2); }
+        .wiki-card h4 { font-size: 17px; margin-bottom: 8px; color: var(--primary); }
+        .wiki-card p { font-size: 15px; color: var(--text); line-height: 1.7; }
+
+        @media (max-width: 520px) {
+            .assistant-search {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                min-height: 460px;
+                padding: 34px 18px;
+            }
+        }
+    </style>
+</head>
+<body class="has-top-nav">
+    <header class="header">
+        <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
+        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索课程、知识点..." id="mainSearch"><i class="fas fa-search"></i></div></div>
+        <div class="header-right">
+            <div class="notification-icon"><i class="fas fa-bell"></i></div>
+            <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
+        </div>
+    </header>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-book"></i><span>学科</span></a>
+        <a href="knowledge.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>知识点</span></a>
+        <a href="assistant.html" class="nav-item active"><i class="fas fa-robot"></i><span>智学助手</span></a>
+        <a href="ar-learning.html" class="nav-item"><i class="fas fa-vr-cardboard"></i><span>AR学习</span></a>
+        <a href="game.html" class="nav-item"><i class="fas fa-gamepad"></i><span>知识秘境</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+    </nav>
+    <div class="user-dropdown" id="userDropdown">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>个人中心</span></a>
+        <a href="profile-settings.html" class="dropdown-item"><i class="fas fa-cog"></i><span>设置</span></a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
+    </div>
+
+    <main class="main-content">
+        <h1 style="font-size:20px;margin-bottom:8px;text-align:center;">智学助手</h1>
+        <p style="text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:24px;">关键词搜索 · 拍照搜题 · 智能答疑 · 知识追踪推荐</p>
+
+        <div class="assistant-search card">
+            <div class="search-box">
+                <input type="text" id="queryInput" placeholder="输入知识点或题目关键词，如：勾股定理、牛顿第二定律、光合作用">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="assistant-actions">
+                <div class="assistant-action" onclick="document.getElementById('queryInput').focus();">
+                    <i class="fas fa-keyboard"></i>
+                    <span>文字输入</span>
+                </div>
+                <div class="assistant-action" onclick="showNotification('语音输入功能即将开放', 'info');">
+                    <i class="fas fa-microphone"></i>
+                    <span>语音输入</span>
+                </div>
+                <div class="assistant-action" onclick="showNotification('拍照搜题：上传题目图片后可获得AI解析与解题步骤', 'info');">
+                    <i class="fas fa-camera"></i>
+                    <span>拍照搜题</span>
+                </div>
+            </div>
+            <button type="button" class="btn-primary" style="width:100%;" id="btnSearch">搜索</button>
+        </div>
+
+        <div id="searchResults" style="display:none;">
+            <div class="wiki-card">
+                <h4 id="wikiTitle">知识点百科</h4>
+                <p id="wikiContent">加载中…</p>
+            </div>
+            <div class="result-section card">
+                <h3>相关课程 / 资源</h3>
+                <div class="grid grid-2" id="relatedList"></div>
+            </div>
+            <div class="result-section card">
+                <h3>智能追问推荐</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;" id="suggestList"></div>
+            </div>
+        </div>
+
+        <div id="emptyHint" class="card empty-state">
+            <i class="fas fa-robot"></i>
+            <p>输入关键词搜索课程、习题与知识点百科，或使用拍照搜题获取解析。</p>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script>
+        const mockWiki = {
+            '勾股定理': '在直角三角形中，两直角边的平方和等于斜边的平方，即 a²+b²=c²。可用于求边长、证明垂直等。典型例题：已知两直角边 3、4，求斜边。',
+            '牛顿第二定律': '物体加速度与所受合外力成正比，与质量成反比：F=ma。单位：N、kg、m/s²。应用：求力、求加速度、连接体问题。',
+            '光合作用': '绿色植物在光下，以 CO₂ 和 H₂O 为原料，在叶绿体中合成有机物并释放 O₂。光反应与暗反应阶段。'
+        };
+        const mockRelated = [
+            { id: 1, title: '勾股定理的证明与应用', type: '微课', cover: 'img/0006.jpg' },
+            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', cover: 'img/0007.jpg' },
+            { id: 3, title: '光合作用全过程', type: '视频', cover: 'img/0008.jpg' },
+            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', cover: 'img/0009.jpg' },
+            { id: 5, title: '氧化还原反应方程式', type: '微课', cover: 'img/0010.jpg' },
+            { id: 6, title: '地球运动与昼夜交替', type: 'AR实验', cover: 'img/0011.jpg' }
+        ];
+        const mockSuggest = ['勾股定理逆定理', '三角函数', '力学综合', '错题归因分析'];
+        document.getElementById('btnSearch').onclick = function() {
+            const q = document.getElementById('queryInput').value.trim();
+            if (!q) { showNotification('请输入搜索关键词', 'warning'); return; }
+            document.getElementById('emptyHint').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'block';
+            const key = Object.keys(mockWiki).find(k => q.indexOf(k) >= 0) || Object.keys(mockWiki)[0];
+            document.getElementById('wikiTitle').textContent = key + ' - 知识点百科';
+            document.getElementById('wikiContent').textContent = mockWiki[key] || '暂无该知识点百科，请尝试其他关键词。';
+            document.getElementById('relatedList').innerHTML = mockRelated.map(r =>
+                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
+            ).join('');
+            document.getElementById('suggestList').innerHTML = mockSuggest.map(s =>
+                `<span class="tag tag-primary" style="cursor:pointer;">${s}</span>`
+            ).join('');
+        };
+    </script>
+</body>
+</html>

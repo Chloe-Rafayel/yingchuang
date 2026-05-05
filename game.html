@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识秘境 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .game-hero {
+            background-image: url('img/0013.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* 蒙版：整体变暗，同时凸显文字 */
+            background:
+                linear-gradient(135deg, rgba(15, 23, 42, 0.72) 0%, rgba(79, 70, 229, 0.35) 55%, rgba(139, 94, 60, 0.18) 100%),
+                radial-gradient(520px 260px at 15% 85%, rgba(255, 255, 255, 0.12), transparent 62%),
+                radial-gradient(420px 240px at 85% 90%, rgba(47, 158, 68, 0.12), transparent 62%);
+            z-index: 0;
+        }
+        .game-hero > * {
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        .game-hero h1 { font-size: 20px; margin-bottom: 8px; }
+        .game-hero p { font-size: 14px; opacity: 0.9; }
+        .game-modes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .game-mode { background: var(--bg-card); border-radius: 12px; padding: 20px; text-align: center; border: 2px solid var(--border); cursor: pointer; transition: all 0.3s; }
+        .game-mode:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .game-mode i { font-size: 36px; color: var(--accent); margin-bottom: 8px; display: block; }
+        .game-mode span { font-size: 14px; font-weight: 600; color: var(--text); }
+        .rank-card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
+        .rank-card .rank { font-weight: 700; color: var(--primary); margin-right: 12px; }
+        .rank-card .name { flex: 1; }
+        .rank-card .score { color: var(--accent); font-weight: 600; }
+    </style>
+</head>
+<body class="has-top-nav">
+    <header class="header">
+        <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
+        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索..." onfocus="location.href='assistant.html'"><i class="fas fa-search"></i></div></div>
+        <div class="header-right">
+            <div class="notification-icon"><i class="fas fa-bell"></i></div>
+            <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
+        </div>
+    </header>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-book"></i><span>学科</span></a>
+        <a href="knowledge.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>知识点</span></a>
+        <a href="assistant.html" class="nav-item"><i class="fas fa-robot"></i><span>智学助手</span></a>
+        <a href="ar-learning.html" class="nav-item"><i class="fas fa-vr-cardboard"></i><span>AR学习</span></a>
+        <a href="game.html" class="nav-item active"><i class="fas fa-gamepad"></i><span>知识秘境</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+    </nav>
+    <div class="user-dropdown" id="userDropdown">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>个人中心</span></a>
+        <a href="profile-settings.html" class="dropdown-item"><i class="fas fa-cog"></i><span>设置</span></a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
+    </div>
+
+    <main class="main-content">
+        <div class="game-hero">
+            <h1><i class="fas fa-dragon"></i> 知识秘境</h1>
+            <p>VR 实景寻宝 · 多人探秘 · 玩中学</p>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:12px;">选择场景进入寻宝</h2>
+            <div class="game-modes">
+                <div class="game-mode" onclick="showNotification('进入 VR 实景学习场景', 'info');">
+                    <i class="fas fa-university"></i>
+                    <span>古代文明遗址</span>
+                </div>
+                <div class="game-mode" onclick="showNotification('进入科学实验室场景', 'info');">
+                    <i class="fas fa-flask"></i>
+                    <span>科学实验室</span>
+                </div>
+                <div class="game-mode" onclick="showNotification('进入自然生态系统场景', 'info');">
+                    <i class="fas fa-leaf"></i>
+                    <span>自然生态</span>
+                </div>
+                <a href="game-room.html" class="game-mode">
+                    <i class="fas fa-users"></i>
+                    <span>多人探秘</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:12px;">当前热门活动</h2>
+            <ul style="list-style:none;">
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);">周末团队知识竞赛 · 03-16 14:00</li>
+                <li style="padding:10px 0;">历史碎片收集活动进行中</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 style="font-size:16px;margin-bottom:12px;">排行榜</h2>
+            <div class="rank-card"><span class="rank">1</span><span class="name">学海启航</span><span class="score">1280 分</span></div>
+            <div class="rank-card"><span class="rank">2</span><span class="name">探索者</span><span class="score">1150 分</span></div>
+            <div class="rank-card"><span class="rank">3</span><span class="name">星光少年</span><span class="score">980 分</span></div>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+</body>
+</html>

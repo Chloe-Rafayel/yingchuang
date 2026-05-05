@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关注列表 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="profile.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">关注</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">您关注的教师、学生或机构。</p>
+            <div id="list"></div>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        const users = [{ name: '张老师', verified: true }, { name: '李老师', verified: true }];
+        document.getElementById('list').innerHTML = users.map(u =>
+            `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);"><span class="${u.verified ? 'verified' : ''}">${u.name}</span><button class="btn-secondary" style="padding:6px 12px;">取消关注</button></div>`
+        ).join('') || '<div class="empty-state"><i class="fas fa-user-plus"></i><p>暂无关注</p></div>';
+    </script>
+</body>
+</html>

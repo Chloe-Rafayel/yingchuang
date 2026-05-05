@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="profile.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">购物车</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">付费课程或文创商品可暂存于此，统一结算。</p>
+            <div id="cartList"></div>
+            <div id="cartEmpty" class="empty-state" style="display:none;"><i class="fas fa-shopping-cart"></i><p>购物车为空</p></div>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        const cart = mockData.cart || [];
+        const cartList = document.getElementById('cartList');
+        const cartEmpty = document.getElementById('cartEmpty');
+        if (cart.length) {
+            cartList.innerHTML = cart.map((item, i) =>
+                `<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);"><img src="${item.cover}" alt="" style="width:80px;height:50px;object-fit:cover;border-radius:8px;" onerror="this.src='img/1.jpg'"><div style="flex:1;"><div class="card-title">${item.title}</div><div>¥${item.price} × ${item.qty}</div></div><button class="btn-secondary" style="padding:6px 12px;">删除</button></div>`
+            ).join('');
+        } else {
+            cartList.innerHTML = '';
+            cartEmpty.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

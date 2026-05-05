@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多人探秘 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="game.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">多人探秘</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:12px;">创建房间</h2>
+            <div class="form-group"><label>房间名称</label><input type="text" class="input-field" placeholder="例如：周末探秘小队"></div>
+            <div class="form-group"><label>房间密码（可选）</label><input type="text" class="input-field" placeholder="留空则公开"></div>
+            <div class="form-group"><label>人数上限</label><select class="select-field"><option>2</option><option>4</option><option>6</option></select></div>
+            <button type="button" class="btn-primary" onclick="showNotification('房间已创建，可邀请好友加入', 'success');">创建房间</button>
+        </div>
+        <div class="card">
+            <h2 style="font-size:16px;margin-bottom:12px;">加入房间</h2>
+            <div class="form-group"><label>房间号</label><input type="text" class="input-field" placeholder="输入房间号或从好友邀请进入"></div>
+            <button type="button" class="btn-secondary" onclick="showNotification('已加入房间', 'info');">加入房间</button>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+</body>
+</html>

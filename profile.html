@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .profile-wrap { padding-bottom: 24px; }
+        .profile-banner { height: 120px; border-radius: 0 0 20px 20px; }
+        .profile-avatar-wrap { padding-left: 20px; margin-top: -44px; margin-bottom: 12px; }
+        .profile-stats { padding: 0 20px 16px; display: flex; gap: 24px; }
+        .profile-stat { cursor: pointer; }
+        .profile-name { padding: 0 20px 4px; font-size: 20px; font-weight: 700; }
+        .profile-name.verified { color: var(--teacher-badge); }
+        .profile-bio { padding: 0 20px 16px; font-size: 13px; color: var(--text-muted); }
+        .profile-tabs { display: flex; background: var(--bg-card); margin: 0 20px 16px; border-radius: 12px; overflow: hidden; }
+        .profile-tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; color: var(--text-muted); border: none; background: transparent; cursor: pointer; }
+        .profile-tab.active { background: var(--primary); color: white; font-weight: 600; }
+        .profile-feed { padding: 0 20px; }
+        .feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .feed-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--bg-muted); }
+        .feed-item img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
+</head>
+<body class="has-top-nav">
+    <header class="header">
+        <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
+        <div class="header-center"></div>
+        <div class="header-right">
+            <div class="notification-icon"><i class="fas fa-bell"></i></div>
+            <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
+        </div>
+    </header>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-book"></i><span>学科</span></a>
+        <a href="knowledge.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>知识点</span></a>
+        <a href="assistant.html" class="nav-item"><i class="fas fa-robot"></i><span>智学助手</span></a>
+        <a href="ar-learning.html" class="nav-item"><i class="fas fa-vr-cardboard"></i><span>AR学习</span></a>
+        <a href="game.html" class="nav-item"><i class="fas fa-gamepad"></i><span>知识秘境</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fas fa-user"></i><span>我的</span></a>
+    </nav>
+    <div class="user-dropdown" id="userDropdown">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>个人中心</span></a>
+        <a href="profile-settings.html" class="dropdown-item"><i class="fas fa-cog"></i><span>设置</span></a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
+    </div>
+
+    <main class="main-content profile-wrap">
+        <div class="profile-banner"></div>
+        <div class="profile-avatar-wrap">
+            <div class="profile-avatar" style="width:88px;height:88px;border-radius:50%;border:4px solid white;background:linear-gradient(135deg, var(--primary), var(--primary-dark));display:flex;align-items:center;justify-content:center;color:white;font-size:28px;"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="profile-name verified" id="profileName">学海启航</div>
+        <div class="profile-bio" id="profileBio">热爱学习，探索知识星途</div>
+        <div class="profile-stats">
+            <div class="profile-stat" onclick="location.href='profile-likes.html'"><span class="num" id="statLikes">0</span><span class="label">获赞与收藏</span></div>
+            <div class="profile-stat" onclick="location.href='profile-follow.html'"><span class="num" id="statFollow">0</span><span class="label">关注</span></div>
+            <div class="profile-stat" onclick="location.href='profile-fans.html'"><span class="num" id="statFans">0</span><span class="label">粉丝</span></div>
+            <div class="profile-stat" onclick="showNotification('朋友列表：通讯录已开通平台的好友', 'info');"><span class="num" id="statFriends">0</span><span class="label">朋友</span></div>
+        </div>
+
+        <div class="profile-tabs">
+            <button type="button" class="profile-tab active" data-tab="works">笔记/作品</button>
+            <button type="button" class="profile-tab" data-tab="likes">我的点赞</button>
+            <button type="button" class="profile-tab" data-tab="fav">我的收藏</button>
+        </div>
+        <div class="profile-feed">
+            <div id="panelWorks" class="feed-panel">
+                <div class="feed-grid" id="feedWorks"></div>
+            </div>
+            <div id="panelLikes" class="feed-panel" style="display:none;">
+                <p style="text-align:center;color:var(--text-muted);padding:20px;"><a href="profile-likes.html">查看我的点赞列表</a></p>
+            </div>
+            <div id="panelFav" class="feed-panel" style="display:none;">
+                <p style="text-align:center;color:var(--text-muted);padding:20px;"><a href="profile-fav.html">查看我的收藏列表</a></p>
+            </div>
+        </div>
+
+        <div class="card" style="margin: 20px;">
+            <h2 style="font-size:16px;margin-bottom:14px;">功能入口</h2>
+            <div class="func-grid">
+                <a href="profile-cart.html" class="func-item"><i class="fas fa-shopping-cart"></i><span>购物车</span></a>
+                <a href="profile-card.html" class="func-item"><i class="fas fa-wallet"></i><span>卡包</span></a>
+                <a href="profile-courses.html" class="func-item"><i class="fas fa-book"></i><span>我的课程</span></a>
+                <a href="profile-calendar.html" class="func-item"><i class="fas fa-calendar-alt"></i><span>日历提醒</span></a>
+                <a href="profile-feedback.html" class="func-item"><i class="fas fa-headset"></i><span>客服反馈</span></a>
+                <a href="resource-upload.html" class="func-item"><i class="fas fa-upload"></i><span>资源上传</span></a>
+                <a href="profile-settings.html" class="func-item"><i class="fas fa-cog"></i><span>设置</span></a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script>
+        const user = getCurrentUser() || mockData.user;
+        document.getElementById('profileName').textContent = user.nickname || '学海启航';
+        document.getElementById('profileName').className = 'profile-name ' + (user.verified ? 'verified' : '');
+        document.getElementById('profileBio').textContent = user.bio || '热爱学习，探索知识星途';
+        document.getElementById('statLikes').textContent = (user.likesCount !== undefined ? user.likesCount : mockData.user.likesCount);
+        document.getElementById('statFollow').textContent = user.followCount !== undefined ? user.followCount : mockData.user.followCount;
+        document.getElementById('statFans').textContent = user.fansCount !== undefined ? user.fansCount : mockData.user.fansCount;
+        document.getElementById('statFriends').textContent = user.friendsCount !== undefined ? user.friendsCount : mockData.user.friendsCount;
+        if (document.getElementById('userName')) document.getElementById('userName').textContent = user.nickname || '学海启航';
+
+        const works = [
+            { id: 1, title: '勾股定理的证明与应用', cover: 'img/0004.jpg' },
+            { id: 2, title: '牛顿第二定律AR实验', cover: 'img/0005.jpg' }
+        ];
+        document.getElementById('feedWorks').innerHTML = works.map(r =>
+            `<a href="resource-detail.html?id=${r.id}" class="feed-item"><img src="${r.cover}" alt="" onerror="this.src='img/0004.jpg';this.onerror=null;"></a>`
+        ).join('');
+
+        document.querySelectorAll('.profile-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.feed-panel').forEach(p => p.style.display = 'none');
+                this.classList.add('active');
+                const id = 'panel' + this.dataset.tab.charAt(0).toUpperCase() + this.dataset.tab.slice(1);
+                const panel = document.getElementById(id);
+                if (panel) panel.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR沉浸学习 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .ar-banner {
+            height: 220px;
+            border-radius: 16px;
+            background-image: url('img/0012.jpg');
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ar-banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* 蒙版：整体变暗，同时保留浅蓝+乡村点缀的和谐感 */
+            background:
+                linear-gradient(180deg, rgba(15, 23, 42, 0.55) 0%, rgba(79, 70, 229, 0.35) 60%, rgba(47, 158, 68, 0.18) 100%),
+                radial-gradient(500px 240px at 20% 85%, rgba(255, 255, 255, 0.12), transparent 62%),
+                radial-gradient(420px 220px at 85% 90%, rgba(139, 94, 60, 0.18), transparent 62%);
+            z-index: 0;
+        }
+        .ar-banner > span {
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+        .ar-module { margin-bottom: 20px; }
+        .ar-module h2 { font-size: 16px; margin-bottom: 12px; color: var(--text); }
+        .ar-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .ar-card { background: var(--bg-card); border-radius: 12px; padding: 16px; border: 2px solid var(--border); text-align: center; cursor: pointer; transition: all 0.3s; }
+        .ar-card:hover { border-color: var(--primary); box-shadow: 0 6px 16px rgba(79,70,229,0.15); }
+        .ar-card i { font-size: 32px; color: var(--primary); margin-bottom: 8px; display: block; }
+        .ar-card span { font-size: 13px; color: var(--text); }
+    </style>
+</head>
+<body class="has-top-nav">
+    <header class="header">
+        <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
+        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索..." onfocus="location.href='assistant.html'"><i class="fas fa-search"></i></div></div>
+        <div class="header-right">
+            <div class="notification-icon"><i class="fas fa-bell"></i></div>
+            <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
+        </div>
+    </header>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>首页</span></a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-book"></i><span>学科</span></a>
+        <a href="knowledge.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>知识点</span></a>
+        <a href="assistant.html" class="nav-item"><i class="fas fa-robot"></i><span>智学助手</span></a>
+        <a href="ar-learning.html" class="nav-item active"><i class="fas fa-vr-cardboard"></i><span>AR学习</span></a>
+        <a href="game.html" class="nav-item"><i class="fas fa-gamepad"></i><span>知识秘境</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+    </nav>
+    <div class="user-dropdown" id="userDropdown">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>个人中心</span></a>
+        <a href="profile-settings.html" class="dropdown-item"><i class="fas fa-cog"></i><span>设置</span></a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
+    </div>
+
+    <main class="main-content">
+        <div class="ar-banner">
+            <span><i class="fas fa-vr-cardboard" style="margin-right:10px;"></i>AR/VR 沉浸学习 · 热门实验与情景课堂</span>
+        </div>
+
+        <div class="card ar-module">
+            <h2>AI+AR 智能实验室</h2>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">虚拟实验 + AI 安全监控与操作指导，自动生成实验报告</p>
+            <div class="ar-cards">
+                <div class="ar-card" onclick="showNotification('进入物理虚拟实验', 'info');"><i class="fas fa-atom"></i><span>智能物理实验</span></div>
+                <div class="ar-card" onclick="showNotification('进入化学虚拟实验', 'info');"><i class="fas fa-flask"></i><span>智能化化学反应</span></div>
+                <div class="ar-card" onclick="showNotification('进入生物虚拟实验', 'info');"><i class="fas fa-dna"></i><span>生物观察实验</span></div>
+            </div>
+        </div>
+
+        <div class="card ar-module">
+            <h2>AI+AR 情景课堂</h2>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">历史场景重现、语言情景对话、职业体验</p>
+            <div class="ar-cards">
+                <div class="ar-card" onclick="location.href='resource-detail.html?id=4';"><i class="fas fa-landmark"></i><span>历史场景重现</span></div>
+                <div class="ar-card" onclick="showNotification('多语种口语练习', 'info');"><i class="fas fa-comments"></i><span>语言情景对话</span></div>
+                <div class="ar-card" onclick="showNotification('职业体验模拟', 'info');"><i class="fas fa-user-tie"></i><span>职业体验</span></div>
+            </div>
+        </div>
+
+        <div class="card ar-module">
+            <h2>实用工具与服务</h2>
+            <div class="ar-cards">
+                <a href="courses.html" class="ar-card"><i class="fas fa-book-open"></i><span>精品课程库</span></a>
+                <div class="ar-card" onclick="showNotification('数字人教师专区', 'info');"><i class="fas fa-user-graduate"></i><span>数字人教师</span></div>
+                <a href="profile-plan.html" class="ar-card"><i class="fas fa-route"></i><span>智能规划</span></a>
+                <a href="profile-courses.html" class="ar-card"><i class="fas fa-calendar-check"></i><span>我的课程</span></a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="font-size:16px;margin-bottom:12px;">教学动态</h2>
+            <ul style="list-style:none;">
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);">热门课程《牛顿第二定律AR实验》播放量破 2000</li>
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);">教育新闻：智慧教育试点校扩大至 50 所</li>
+                <li style="padding:10px 0;">教研活动：AR 实验设计培训 03-20 开课</li>
+            </ul>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+</body>
+</html>

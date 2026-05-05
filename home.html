@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .home-hero {
+            height: 640px;
+            border-radius: 22px;
+            background-image: url('img/0017.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            width: 200%;
+            margin-left: -50%;
+            margin-right: 0;
+        }
+        .home-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            /* 让图片整体更浅、更适合黑色中心文字 */
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(219, 234, 254, 0.65) 45%, rgba(255, 255, 255, 0.82) 100%),
+                radial-gradient(700px 220px at 18% 90%, rgba(47, 158, 68, 0.22), transparent 60%),
+                radial-gradient(560px 240px at 80% 95%, rgba(139, 94, 60, 0.22), transparent 62%),
+                radial-gradient(2px 2px at 16% 22%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 60%),
+                radial-gradient(2px 2px at 62% 18%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 60%),
+                radial-gradient(1px 1px at 84% 44%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 60%);
+            z-index: 0;
+        }
+        .home-hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 1320px;
+        }
+        .home-hero-line1 {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(15, 23, 42, 0.75);
+            margin-bottom: 10px;
+            white-space: nowrap;
+        }
+        .home-hero-line2 {
+            font-size: 44px;
+            font-weight: 900;
+            color: #0f172a; /* 按需求：第二行黑色 */
+            margin-bottom: 8px;
+            white-space: nowrap;
+        }
+        .home-hero-line3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(15, 23, 42, 0.72);
+            white-space: nowrap;
+        }
+        @media (max-width: 520px) {
+            .home-hero { height: 520px; }
+            .home-hero { width: 100%; margin-left: 0; margin-right: 0; }
+            .home-hero-line1,
+            .home-hero-line2,
+            .home-hero-line3 { white-space: normal; }
+            .home-hero-line2 { font-size: 34px; }
+        }
+    </style>
+</head>
+<body class="has-top-nav">
+    <header class="header">
+        <div class="header-left">
+            <a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a>
+        </div>
+        <div class="header-center">
+            <div class="search-box">
+                <input type="text" placeholder="搜索课程、知识点、教师..." id="globalSearch" onfocus="window.location.href='assistant.html'">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="notification-icon"><i class="fas fa-bell"></i><span class="notification-badge">2</span></div>
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <div class="user-avatar"><i class="fas fa-user"></i></div>
+                <span class="user-name" id="userName">学海启航</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </header>
+    <nav class="bottom-nav">
+        <a href="home.html" class="nav-item active"><i class="fas fa-home"></i><span>首页</span></a>
+        <a href="subjects.html" class="nav-item"><i class="fas fa-book"></i><span>学科</span></a>
+        <a href="knowledge.html" class="nav-item"><i class="fas fa-lightbulb"></i><span>知识点</span></a>
+        <a href="assistant.html" class="nav-item"><i class="fas fa-robot"></i><span>智学助手</span></a>
+        <a href="ar-learning.html" class="nav-item"><i class="fas fa-vr-cardboard"></i><span>AR学习</span></a>
+        <a href="game.html" class="nav-item"><i class="fas fa-gamepad"></i><span>知识秘境</span></a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user"></i><span>我的</span></a>
+    </nav>
+    <div class="user-dropdown" id="userDropdown">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user-circle"></i><span>个人中心</span></a>
+        <a href="profile-settings.html" class="dropdown-item"><i class="fas fa-cog"></i><span>设置</span></a>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
+    </div>
+
+    <main class="main-content">
+        <div class="home-hero" aria-label="平台主视觉">
+            <div class="home-hero-content">
+                <div class="home-hero-line1">萤窗星途 | 智慧教育云平台</div>
+                <div class="home-hero-line2">用科技为教育赋能</div>
+                <div class="home-hero-line3">E m p o w e r  e d u c a t i o n  w i t h  t e c h n o l o g y</div>
+            </div>
+        </div>
+        <div class="welcome-section card" style="margin-bottom:20px;">
+            <h1 style="font-size:20px;margin-bottom:6px;">欢迎回来，<span id="welcomeUser">学海启航</span></h1>
+            <p style="color:var(--text-muted);font-size:14px;">融合 AI 与 AR，点亮你的知识星途</p>
+        </div>
+
+        <section class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">综合推荐</h2>
+            <div class="grid grid-3" id="featuredList">
+                <!-- 由 JS 填充 -->
+            </div>
+        </section>
+
+        <section class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">热门学科</h2>
+            <div class="grid grid-4" id="subjectGrid">
+                <!-- 由 JS 填充 -->
+            </div>
+        </section>
+
+        <section class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">最新资源</h2>
+            <div class="grid grid-3" id="latestList">
+                <!-- 由 JS 填充 -->
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">平台动态</h2>
+            <ul style="list-style:none;">
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                    <span>全国 AR 实验创意大赛报名开启</span>
+                    <span style="font-size:12px;color:var(--text-muted);">03-10</span>
+                </li>
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                    <span>智学助手 24 小时答疑上线</span>
+                    <span style="font-size:12px;color:var(--text-muted);">03-08</span>
+                </li>
+                <li style="padding:10px 0;display:flex;justify-content:space-between;align-items:center;">
+                    <span>知识秘境多人探秘活动预告</span>
+                    <span style="font-size:12px;color:var(--text-muted);">03-05</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script>
+        const user = getCurrentUser();
+        if (user) {
+            document.getElementById('welcomeUser').textContent = user.nickname || '学海启航';
+            const nameEl = document.getElementById('userName');
+            if (nameEl) nameEl.textContent = user.nickname || '学海启航';
+        }
+        const featuredResources = [
+            { id: 1, title: '勾股定理的证明与应用', type: '微课', subject: '数学', cover: 'img/0001.jpg', author: '张老师', verified: true, playCount: 3200 },
+            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', subject: '物理', cover: 'img/0002.jpg', author: '李老师', verified: true, playCount: 1890 },
+            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', subject: '历史', cover: 'img/0003.jpg', author: '陈老师', verified: true, playCount: 980 }
+        ];
+        const latestResources = [
+            { id: 1, title: '勾股定理的证明与应用', type: '微课', subject: '数学', cover: 'img/0004.jpg', author: '张老师', verified: true, playCount: 3200 },
+            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', subject: '物理', cover: 'img/0005.jpg', author: '李老师', verified: true, playCount: 1890 },
+            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', subject: '历史', cover: 'img/0006.jpg', author: '陈老师', verified: true, playCount: 980 }
+        ];
+        function renderResourceCard(r) {
+            return `<a href="resource-detail.html?id=${r.id}" class="resource-card">
+                <img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0001.jpg'">
+                <div class="info">
+                    <div class="title">${r.title}</div>
+                    <div class="meta">
+                        <span>${r.type}</span>
+                        <span>${r.author}${r.verified ? ' <i class="fas fa-check-circle" style="color:var(--teacher-badge);font-size:10px;"></i>' : ''}</span>
+                        <span><i class="fas fa-play"></i> ${(r.playCount/1000).toFixed(1)}k</span>
+                    </div>
+                </div>
+            </a>`;
+        }
+        document.getElementById('featuredList').innerHTML = featuredResources.map(renderResourceCard).join('');
+        document.getElementById('latestList').innerHTML = latestResources.map(renderResourceCard).join('');
+        const subjects = ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理'];
+        document.getElementById('subjectGrid').innerHTML = subjects.map(s =>
+            `<a href="subject-detail.html?name=${encodeURIComponent(s)}" class="card" style="text-align:center;padding:16px;">
+                <i class="fas fa-book-open" style="font-size:28px;color:var(--primary);margin-bottom:8px;"></i>
+                <div class="card-title">${s}</div>
+            </a>`
+        ).join('');
+    </script>
+</body>
+</html>

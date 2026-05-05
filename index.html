@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <div class="content">
+                <div class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途智慧教育平台</div>
+                <h1 class="title">融合AI与AR · 点亮知识星途</h1>
+                <p class="subtitle">沉浸式、个性化、智能化的未来学习空间</p>
+                <div class="features">
+                    <div class="feature"><i class="fas fa-vr-cardboard"></i><div>AR/VR 沉浸学习</div></div>
+                    <div class="feature"><i class="fas fa-robot"></i><div>智学助手答疑</div></div>
+                    <div class="feature"><i class="fas fa-book-open"></i><div>学科与知识点导航</div></div>
+                    <div class="feature"><i class="fas fa-gamepad"></i><div>知识秘境游戏化</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="form-box">
+                <h2 class="form-title" id="formTitle">欢迎回来</h2>
+                <p class="form-subtitle" id="formSubtitle">请登录您的账户</p>
+                <form id="authForm">
+                    <div class="form-group" id="phoneGroup">
+                        <label for="phone">手机号</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mobile-alt input-icon"></i>
+                            <input type="tel" id="phone" placeholder="请输入手机号（测试账户输入 000000）" maxlength="11">
+                        </div>
+                    </div>
+                    <div class="form-group" id="codeGroup" style="display:none;">
+                        <label for="code">验证码</label>
+                        <div class="captcha-wrapper">
+                            <div class="input-wrapper">
+                                <i class="fas fa-shield-alt input-icon"></i>
+                                <input type="text" id="code" placeholder="请输入验证码">
+                            </div>
+                            <button type="button" class="btn-code" id="btnCode">获取验证码</button>
+                        </div>
+                    </div>
+                    <div class="form-group" id="agreeGroup">
+                        <label class="checkbox">
+                            <input type="checkbox" id="agree" required>
+                            <span>我已阅读并同意 <a href="about.html" target="_blank">用户协议</a> 与 <a href="about.html" target="_blank">隐私政策</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="login-btn" id="submitBtn">登录 / 注册</button>
+                    <div class="third-party">
+                        <span>第三方登录</span>
+                        <div class="third-icons">
+                            <a href="#" class="third-btn" title="微信"><i class="fab fa-weixin"></i></a>
+                            <a href="#" class="third-btn" title="QQ"><i class="fab fa-qq"></i></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/common.js"></script>
+    <script>
+        const form = document.getElementById('authForm');
+        const formTitle = document.getElementById('formTitle');
+        const formSubtitle = document.getElementById('formSubtitle');
+        const phoneGroup = document.getElementById('phoneGroup');
+        const codeGroup = document.getElementById('codeGroup');
+        const phone = document.getElementById('phone');
+        const code = document.getElementById('code');
+        const btnCode = document.getElementById('btnCode');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const p = phone.value.trim();
+            // 测试账户：手机号输入 000000 即可进入
+            const isTestAccount = p === '000000';
+            if (!isTestAccount && !/^1[3-9]\d{9}$/.test(p)) {
+                showNotification('请输入正确的手机号，或输入测试账户 000000', 'warning');
+                return;
+            }
+            if (!document.getElementById('agree').checked) {
+                showNotification('请先同意用户协议与隐私政策', 'warning');
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 登录中...';
+            setTimeout(function() {
+                setCurrentUser({
+                    id: 1,
+                    nickname: '学海启航',
+                    avatar: '',
+                    isTeacher: true,
+                    verified: true
+                });
+                showNotification('登录成功', 'success');
+                window.location.href = 'home.html';
+            }, 800);
+        });
+
+        btnCode.addEventListener('click', function() {
+            const p = phone.value.trim();
+            const isTestAccount = p === '000000';
+            if (!isTestAccount && !/^1[3-9]\d{9}$/.test(p)) {
+                showNotification('请先输入正确手机号', 'warning');
+                return;
+            }
+            let sec = 60;
+            btnCode.disabled = true;
+            const t = setInterval(function() {
+                btnCode.textContent = sec + 's 后重发';
+                sec--;
+                if (sec < 0) {
+                    clearInterval(t);
+                    btnCode.disabled = false;
+                    btnCode.textContent = '获取验证码';
+                }
+            }, 1000);
+            showNotification('验证码已发送', 'info');
+        });
+    </script>
+</body>
+</html>

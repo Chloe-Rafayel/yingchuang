@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡包 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="profile.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">卡包</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">优惠券、会员卡、课程权益卡等。</p>
+            <div id="cardList"></div>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        const coupons = mockData.coupons || [];
+        document.getElementById('cardList').innerHTML = coupons.length ? coupons.map(c =>
+            `<div class="card" style="margin-bottom:12px;border-left:4px solid var(--primary);"><div class="card-title">${c.name}</div><div class="card-subtitle">${c.value} · 有效期至 ${c.expire}</div><button class="btn-secondary" style="margin-top:8px;padding:6px 12px;">去使用</button></div>`
+        ).join('') : '<div class="empty-state"><i class="fas fa-wallet"></i><p>暂无优惠券</p></div>';
+    </script>
+</body>
+</html>

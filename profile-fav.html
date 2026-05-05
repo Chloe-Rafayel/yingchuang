@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的收藏 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="profile.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">我的收藏</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">收藏的课程、知识点、AR 实验等，方便日后查看。</p>
+            <div class="grid grid-2" id="favList"></div>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        const favList = [
+            { id: 1, title: '勾股定理的证明与应用', type: '微课', author: '张老师', cover: 'img/0014.jpg' },
+            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', author: '李老师', cover: 'img/0015.jpg' }
+        ];
+        document.getElementById('favList').innerHTML = favList.map(r =>
+            `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0014.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type} · ${r.author}</div></div></a>`
+        ).join('');
+    </script>
+</body>
+</html>

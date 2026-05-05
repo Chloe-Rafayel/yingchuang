@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能规划 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="ar-learning.html" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">智能规划</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px;">填写学习目标、可用时间、兴趣偏好，系统将生成个性化学习计划并保存至「我的课程」。</p>
+            <div class="form-group">
+                <label>学习目标</label>
+                <input type="text" class="input-field" placeholder="例如：高一物理必修一巩固">
+            </div>
+            <div class="form-group">
+                <label>每周可用时间（小时）</label>
+                <input type="number" class="input-field" placeholder="例如：5" min="1" max="40">
+            </div>
+            <div class="form-group">
+                <label>兴趣偏好</label>
+                <select class="select-field">
+                    <option>物理实验爱好者</option>
+                    <option>历史与人文</option>
+                    <option>数学推理</option>
+                    <option>语言与表达</option>
+                    <option>综合均衡</option>
+                </select>
+            </div>
+            <button type="button" class="btn-primary" style="width:100%;" onclick="showNotification('已生成学习计划，已保存至「我的课程」', 'success'); setTimeout(function(){ location.href='profile-courses.html'; }, 1200);">生成学习计划</button>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源详情 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .resource-video { width: 100%; aspect-ratio: 16/9; background: #1e293b; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 16px; }
+        .resource-3d-hint { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="javascript:history.back()" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">资源详情</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card" style="margin-bottom:20px;">
+            <div class="resource-video" id="mediaArea">
+                <img id="resourceCover" src="" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:none;">
+                <span id="mediaPlaceholder" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;"><i class="fas fa-play-circle" style="font-size:48px;"></i> 视频/AR 演示区域</span>
+            </div>
+            <h1 style="font-size:18px;margin-bottom:8px;" id="resTitle">勾股定理的证明与应用</h1>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                <span class="tag tag-primary" id="resType">微课</span>
+                <span class="tag" id="resSubject">数学</span>
+                <span class="tag" id="resGrade">初二</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;font-size:13px;color:var(--text-muted);">
+                <span>上传教师：<span id="resAuthor" class="verified">张老师</span></span>
+                <span><i class="fas fa-play"></i> <span id="resPlay">0</span> 播放</span>
+                <span><i class="fas fa-clock"></i> <span id="resTime">上传时间</span></span>
+            </div>
+            <p class="resource-3d-hint" id="3dHint">若为 3D 模型资源，可在此区域支持鼠标/手势旋转、缩放查看；VR 影像支持陀螺仪视角（需真机/AR 环境）。</p>
+        </div>
+        <div class="card" style="margin-bottom:20px;">
+            <h2 style="font-size:16px;margin-bottom:12px;">互动区</h2>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+                <button class="btn-secondary" id="btnLike"><i class="fas fa-heart"></i> 点赞 <span id="likeCount">0</span></button>
+                <button class="btn-secondary"><i class="fas fa-star"></i> 收藏</button>
+                <button class="btn-secondary"><i class="fas fa-share"></i> 分享</button>
+                <button class="btn-secondary"><i class="fas fa-download"></i> 下载</button>
+            </div>
+            <div class="form-group">
+                <textarea class="input-field" rows="2" placeholder="写一条评论..."></textarea>
+                <button type="button" class="btn-primary" style="margin-top:8px;" onclick="showNotification('评论已发布', 'success');">发布评论</button>
+            </div>
+            <ul style="list-style:none;margin-top:16px;" id="commentList">
+                <li style="padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;">讲得很清晰，点赞！—— 用户A</li>
+            </ul>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        const id = getUrlParam('id') || '1';
+        const r = mockData.resources.find(x => String(x.id) === id) || mockData.resources[0];
+        const coverEl = document.getElementById('resourceCover');
+        const placeSpan = document.getElementById('mediaPlaceholder');
+        if (coverEl) {
+            coverEl.src = r.cover || 'img/1.jpg';
+            coverEl.onerror = function() { this.style.display = 'none'; if (placeSpan) placeSpan.style.display = 'flex'; };
+            coverEl.onload = function() { this.style.display = 'block'; if (placeSpan) placeSpan.style.display = 'none'; };
+        }
+        document.getElementById('resTitle').textContent = r.title;
+        document.getElementById('resType').textContent = r.type;
+        document.getElementById('resSubject').textContent = r.subject;
+        document.getElementById('resGrade').textContent = r.grade || '';
+        document.getElementById('resAuthor').textContent = r.author;
+        document.getElementById('resAuthor').className = r.verified ? 'verified' : '';
+        document.getElementById('resPlay').textContent = (r.playCount || 0).toLocaleString();
+        document.getElementById('resTime').textContent = '2026-03-10';
+        document.getElementById('likeCount').textContent = r.likes || 0;
+        if (r.type === 'AR实验' || r.type === 'VR全景' || r.type === '3D模型') {
+            document.getElementById('mediaArea').innerHTML = '<span><i class="fas fa-vr-cardboard" style="font-size:48px;"></i><br>AR/VR/3D 沉浸式查看</span>';
+        }
+    </script>
+</body>
+</html>
