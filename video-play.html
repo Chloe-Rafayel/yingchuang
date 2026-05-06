@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .video-wrap {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .video-wrap video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="javascript:history.back()" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;">视频播放</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="card">
+            <div class="video-wrap">
+                <video id="videoPlayer" controls playsinline preload="metadata"></video>
+            </div>
+            <h1 style="font-size:18px;margin-bottom:8px;" id="videoTitle">视频</h1>
+            <p style="font-size:13px;color:var(--text-muted);" id="videoPathHint"></p>
+        </div>
+    </main>
+    <script src="js/common.js"></script>
+    <script>
+        (function () {
+            const rawSrc = getUrlParam('src');
+            const rawTitle = getUrlParam('title');
+            const titleEl = document.getElementById('videoTitle');
+            const hintEl = document.getElementById('videoPathHint');
+            const player = document.getElementById('videoPlayer');
+            if (rawTitle) {
+                titleEl.textContent = decodeURIComponent(rawTitle);
+            }
+            if (!rawSrc) {
+                hintEl.textContent = '未指定视频文件，请从首页资源卡片进入。';
+                return;
+            }
+            const src = decodeURIComponent(rawSrc);
+            hintEl.textContent = '';
+            player.src = src;
+            player.onerror = function () {
+                hintEl.textContent = '无法加载视频，请确认文件已放入对应路径，且格式为浏览器支持的格式（推荐 MP4 H.264）。当前路径：' + src;
+            };
+        })();
+    </script>
+</body>
+</html>

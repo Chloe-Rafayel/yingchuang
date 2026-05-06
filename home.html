@@ -124,7 +124,7 @@
         </div>
 
         <section class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">综合推荐</h2>
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">最新资源</h2>
             <div class="grid grid-3" id="featuredList">
                 <!-- 由 JS 填充 -->
             </div>
@@ -138,7 +138,7 @@
         </section>
 
         <section class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">最新资源</h2>
+            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">综合推荐</h2>
             <div class="grid grid-3" id="latestList">
                 <!-- 由 JS 填充 -->
             </div>
@@ -172,17 +172,20 @@
             if (nameEl) nameEl.textContent = user.nickname || '学海启航';
         }
         const featuredResources = [
-            { id: 1, title: '勾股定理的证明与应用', type: '微课', subject: '数学', cover: 'img/0001.jpg', author: '张老师', verified: true, playCount: 3200 },
-            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', subject: '物理', cover: 'img/0002.jpg', author: '李老师', verified: true, playCount: 1890 },
-            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', subject: '历史', cover: 'img/0003.jpg', author: '陈老师', verified: true, playCount: 980 }
+            { title: '食物中的淀粉：碘液检测实验', type: '视频', subject: '化学', cover: 'img/0001.jpg', author: '萤窗教研组', verified: true, playCount: 2140, video: 'vid/化学检测食物中的淀粉.mp4' },
+            { title: '含羞草为什么会动', type: '视频', subject: '生物', cover: 'img/0002.jpg', author: '萤窗教研组', verified: true, playCount: 1890, video: 'vid/生物含羞草为什么会动.mp4' },
+            { title: '石油的生成过程', type: '视频', subject: '物理', cover: 'img/0003.jpg', author: '萤窗教研组', verified: true, playCount: 1650, video: 'vid/物理石油的生成过程.mp4' }
         ];
         const latestResources = [
-            { id: 1, title: '勾股定理的证明与应用', type: '微课', subject: '数学', cover: 'img/0004.jpg', author: '张老师', verified: true, playCount: 3200 },
-            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', subject: '物理', cover: 'img/0005.jpg', author: '李老师', verified: true, playCount: 1890 },
-            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', subject: '历史', cover: 'img/0006.jpg', author: '陈老师', verified: true, playCount: 980 }
+            { title: '为什么鸡蛋不能放进微波炉', type: '视频', subject: '科普', cover: 'img/0004.jpg', author: '萤窗科普', verified: true, playCount: 3420, video: 'vid/科普为什么鸡蛋不能放进微波炉.mp4' },
+            { title: '如何预防呼吸道疾病', type: '视频', subject: '科普', cover: 'img/0005.jpg', author: '萤窗科普', verified: true, playCount: 2960, video: 'vid/科普如何预防呼吸道疾病.mp4' },
+            { title: '纸巾过滤小实验', type: '视频', subject: '科普', cover: 'img/0006.jpg', author: '萤窗科普', verified: true, playCount: 1780, video: 'vid/科普纸巾过滤.mp4' }
         ];
         function renderResourceCard(r) {
-            return `<a href="resource-detail.html?id=${r.id}" class="resource-card">
+            const href = r.video
+                ? `video-play.html?src=${encodeURIComponent(r.video)}&title=${encodeURIComponent(r.title)}`
+                : `resource-detail.html?id=${r.id}`;
+            return `<a href="${href}" class="resource-card">
                 <img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0001.jpg'">
                 <div class="info">
                     <div class="title">${r.title}</div>
