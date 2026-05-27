@@ -8,12 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .assistant-search {
-            max-width: 1040px;
-            margin: 0 auto 24px;
-            min-height: 520px;
-            padding: 40px 36px;
+            width: calc(100vw - 60px);
+            max-width: none;
+            margin-left: calc(50% - 50vw + 30px);
+            margin-right: calc(50% - 50vw + 30px);
+            margin-top: 0;
+            margin-bottom: 24px;
+            min-height: 550px;
+            padding: 40px 36px 20px;
             display: flex;
             flex-direction: column;
+        }
+        .assistant-search-bar {
+            margin-top: auto;
+            width: 100%;
+        }
+        .assistant-search-bar .search-box {
+            margin-bottom: 12px;
         }
         .assistant-search .search-box input {
             padding: 22px 26px 22px 60px;
@@ -21,8 +32,27 @@
             border-radius: 36px;
         }
         .assistant-search .search-box i { font-size: 20px; }
-        .assistant-actions { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 40px; }
-        .assistant-action { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 32px; background: var(--bg-card); border-radius: 18px; border: 2px solid var(--border); cursor: pointer; transition: all 0.3s; }
+        .assistant-actions {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            row-gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .assistant-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 36px;
+            background: var(--bg-card);
+            border-radius: 18px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
         .assistant-action:hover { border-color: var(--primary); color: var(--primary); }
         .assistant-action i { font-size: 32px; }
         .result-section { margin-bottom: 24px; }
@@ -31,14 +61,87 @@
         .wiki-card h4 { font-size: 17px; margin-bottom: 8px; color: var(--primary); }
         .wiki-card p { font-size: 15px; color: var(--text); line-height: 1.7; }
 
+        #emptyHint {
+            width: calc(100vw - 60px);
+            max-width: none;
+            margin-left: calc(50% - 50vw + 30px);
+            margin-right: calc(50% - 50vw + 30px);
+        }
+
+        #photoInput { display: none; }
+
+        .photo-preview-wrap {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            background: var(--bg-muted);
+            text-align: center;
+        }
+        .photo-preview-wrap.show { display: block; }
+        .photo-preview-wrap img {
+            max-width: 100%;
+            max-height: 280px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: white;
+            border: 1px solid var(--border);
+        }
+        .photo-preview-meta {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+        .photo-preview-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .photo-result-card {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .photo-result-card h4 {
+            font-size: 16px;
+            color: #b45309;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .photo-result-card .steps {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+        }
+        .photo-result-card .steps ol {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+        .photo-analyzing {
+            display: none;
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .photo-analyzing.show { display: block; }
+        .photo-analyzing i { font-size: 28px; color: var(--primary); margin-bottom: 10px; }
+
         @media (max-width: 520px) {
             .assistant-search {
-                width: 100%;
-                max-width: 100%;
-                margin-left: 0;
-                margin-right: 0;
-                min-height: 460px;
-                padding: 34px 18px;
+                width: calc(100vw - 60px);
+                margin-left: calc(50% - 50vw + 30px);
+                margin-right: calc(50% - 50vw + 30px);
+                min-height: 490px;
+                padding: 34px 18px 20px;
             }
         }
     </style>
@@ -73,10 +176,6 @@
         <p style="text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:24px;">关键词搜索 · 拍照搜题 · 智能答疑 · 知识追踪推荐</p>
 
         <div class="assistant-search card">
-            <div class="search-box">
-                <input type="text" id="queryInput" placeholder="输入知识点或题目关键词，如：勾股定理、牛顿第二定律、光合作用">
-                <i class="fas fa-search"></i>
-            </div>
             <div class="assistant-actions">
                 <div class="assistant-action" onclick="document.getElementById('queryInput').focus();">
                     <i class="fas fa-keyboard"></i>
@@ -86,18 +185,53 @@
                     <i class="fas fa-microphone"></i>
                     <span>语音输入</span>
                 </div>
-                <div class="assistant-action" onclick="showNotification('拍照搜题：上传题目图片后可获得AI解析与解题步骤', 'info');">
+                <div class="assistant-action" id="photoAction">
                     <i class="fas fa-camera"></i>
                     <span>拍照搜题</span>
                 </div>
             </div>
-            <button type="button" class="btn-primary" style="width:100%;" id="btnSearch">搜索</button>
+            <div class="photo-preview-wrap" id="photoPreviewWrap">
+                <img id="photoPreview" src="" alt="题目图片预览">
+                <div class="photo-preview-meta" id="photoFileName"></div>
+                <div class="photo-preview-actions">
+                    <button type="button" class="btn-secondary" id="btnReuploadPhoto">重新选择</button>
+                    <button type="button" class="btn-accent" id="btnAnalyzePhoto">开始识别解析</button>
+                </div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*">
+            <div class="assistant-search-bar">
+                <div class="search-box">
+                    <input type="text" id="queryInput" placeholder="输入知识点或题目关键词，如：勾股定理、牛顿第二定律、光合作用">
+                    <i class="fas fa-search"></i>
+                </div>
+                <button type="button" class="btn-primary" style="width:100%;" id="btnSearch">搜索</button>
+            </div>
         </div>
 
         <div id="searchResults" style="display:none;">
+            <div class="photo-analyzing" id="photoAnalyzing">
+                <div><i class="fas fa-spinner fa-spin"></i></div>
+                <p>正在识别题目图片，请稍候…</p>
+            </div>
+            <div id="photoResultBlock" style="display:none;">
+                <div class="photo-result-card">
+                    <h4><i class="fas fa-camera"></i> 拍照搜题 · AI 解析</h4>
+                    <p id="photoOcrText" style="font-size:14px;margin-bottom:12px;color:var(--text-muted);"></p>
+                    <div class="steps" id="photoAnswerSteps"></div>
+                </div>
+            </div>
             <div class="wiki-card">
                 <h4 id="wikiTitle">知识点百科</h4>
                 <p id="wikiContent">加载中…</p>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="wikiMeta"></p>
+            </div>
+            <div class="result-section card" id="examTypesSection" style="display:none;">
+                <h3>常考题型（3 道）</h3>
+                <div id="examTypesResult"></div>
+            </div>
+            <div class="result-section card">
+                <h3>匹配知识点</h3>
+                <div class="grid grid-2" id="matchedKpList"></div>
             </div>
             <div class="result-section card">
                 <h3>相关课程 / 资源</h3>
@@ -112,16 +246,13 @@
         <div id="emptyHint" class="card empty-state">
             <i class="fas fa-robot"></i>
             <p>输入关键词搜索课程、习题与知识点百科，或使用拍照搜题获取解析。</p>
+            <p style="font-size:13px;margin-top:10px;color:var(--primary);" id="kbStatsHint"></p>
         </div>
     </main>
 
     <script src="js/common.js"></script>
+    <script src="js/knowledge-base.js"></script>
     <script>
-        const mockWiki = {
-            '勾股定理': '在直角三角形中，两直角边的平方和等于斜边的平方，即 a²+b²=c²。可用于求边长、证明垂直等。典型例题：已知两直角边 3、4，求斜边。',
-            '牛顿第二定律': '物体加速度与所受合外力成正比，与质量成反比：F=ma。单位：N、kg、m/s²。应用：求力、求加速度、连接体问题。',
-            '光合作用': '绿色植物在光下，以 CO₂ 和 H₂O 为原料，在叶绿体中合成有机物并释放 O₂。光反应与暗反应阶段。'
-        };
         const mockRelated = [
             { id: 1, title: '勾股定理的证明与应用', type: '微课', cover: 'img/0006.jpg' },
             { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', cover: 'img/0007.jpg' },
@@ -131,20 +262,161 @@
             { id: 6, title: '地球运动与昼夜交替', type: 'AR实验', cover: 'img/0011.jpg' }
         ];
         const mockSuggest = ['勾股定理逆定理', '三角函数', '力学综合', '错题归因分析'];
+
+        (function showKbStats() {
+            const s = KnowledgeBase.getStats();
+            const el = document.getElementById('kbStatsHint');
+            if (el) el.textContent = `知识库已收录 ${s.total.toLocaleString()} 个知识点 · ${s.examTypesTotal.toLocaleString()} 道常考题型`;
+        })();
+
+        function renderTextSearchResults(q) {
+            document.getElementById('photoResultBlock').style.display = 'none';
+            document.getElementById('photoAnalyzing').classList.remove('show');
+            const wiki = KnowledgeBase.searchWiki(q);
+            const matched = KnowledgeBase.searchKnowledgePoints({ q: q, pageSize: 6 });
+            const kp = (wiki && wiki.point) || matched.items[0];
+
+            if (kp) {
+                document.getElementById('wikiTitle').textContent = kp.name + ' · 知识点百科';
+                document.getElementById('wikiContent').textContent = wiki ? wiki.content : kp.desc;
+                document.getElementById('wikiMeta').textContent = `${kp.grade} · ${kp.subject} · 难度${kp.difficulty} · ` +
+                    `<a href="knowledge-detail.html?id=${kp.id}" style="color:var(--primary);">查看详情</a>`;
+                const examSection = document.getElementById('examTypesSection');
+                const examResult = document.getElementById('examTypesResult');
+                if (kp.examTypes && kp.examTypes.length) {
+                    examSection.style.display = 'block';
+                    examResult.innerHTML = kp.examTypes.map(function (e, i) {
+                        return `<div class="photo-result-card" style="margin-bottom:10px;background:linear-gradient(135deg,#f0f4ff,#e8eeff);border-color:rgba(79,70,229,0.2);">
+                            <h4 style="color:var(--primary);font-size:14px;margin-bottom:6px;">题型 ${i + 1} · ${e.type}</h4>
+                            <p style="font-size:13px;margin-bottom:4px;"><strong>${e.title}</strong></p>
+                            <p style="font-size:13px;color:var(--text-muted);">${e.stem}</p>
+                        </div>`;
+                    }).join('');
+                } else {
+                    examSection.style.display = 'none';
+                }
+            } else {
+                document.getElementById('wikiTitle').textContent = '未找到精确匹配';
+                document.getElementById('wikiContent').textContent = '请尝试输入年级、学科或具体知识点名称，如「初二数学」「光合作用」「牛顿定律」。';
+                document.getElementById('wikiMeta').textContent = '';
+                document.getElementById('examTypesSection').style.display = 'none';
+            }
+
+            document.getElementById('matchedKpList').innerHTML = matched.items.length ? matched.items.map(function (k) {
+                return `<a href="knowledge-detail.html?id=${k.id}" class="card" style="display:block;">
+                    <div class="card-title">${k.name}</div>
+                    <div class="card-subtitle">${k.grade} · ${k.subject}</div>
+                    <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+                        ${k.examTypes.map(e => `<span class="tag tag-primary">${e.type}</span>`).join('')}
+                    </div>
+                </a>`;
+            }).join('') : '<p style="color:var(--text-muted);font-size:14px;">暂无更多匹配知识点</p>';
+
+            document.getElementById('relatedList').innerHTML = mockRelated.map(r =>
+                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
+            ).join('');
+            const suggests = kp && kp.next && kp.next.length ? kp.next.slice(0, 4)
+                : matched.items.slice(0, 4).map(k => k.name);
+            document.getElementById('suggestList').innerHTML = suggests.map(s =>
+                `<span class="tag tag-primary" style="cursor:pointer;" onclick="document.getElementById('queryInput').value='${s.replace(/'/g, '')}';document.getElementById('btnSearch').click();">${s}</span>`
+            ).join('');
+        }
+        const photoInput = document.getElementById('photoInput');
+        const photoAction = document.getElementById('photoAction');
+        const photoPreviewWrap = document.getElementById('photoPreviewWrap');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoFileName = document.getElementById('photoFileName');
+        const btnReuploadPhoto = document.getElementById('btnReuploadPhoto');
+        const btnAnalyzePhoto = document.getElementById('btnAnalyzePhoto');
+        let selectedPhotoFile = null;
+        let photoObjectUrl = '';
+
+        function clearPhotoObjectUrl() {
+            if (photoObjectUrl) {
+                URL.revokeObjectURL(photoObjectUrl);
+                photoObjectUrl = '';
+            }
+        }
+
+        function openPhotoPicker() {
+            photoInput.click();
+        }
+
+        function handlePhotoSelected(file) {
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showNotification('请选择图片文件（jpg、png、webp 等）', 'warning');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('图片大小不能超过 10MB', 'warning');
+                return;
+            }
+            clearPhotoObjectUrl();
+            selectedPhotoFile = file;
+            photoObjectUrl = URL.createObjectURL(file);
+            photoPreview.src = photoObjectUrl;
+            photoFileName.textContent = file.name + ' · ' + (file.size / 1024).toFixed(1) + ' KB';
+            photoPreviewWrap.classList.add('show');
+            showNotification('图片已上传，可点击「开始识别解析」', 'success');
+        }
+
+        photoAction.addEventListener('click', openPhotoPicker);
+        btnReuploadPhoto.addEventListener('click', openPhotoPicker);
+        photoInput.addEventListener('change', function () {
+            handlePhotoSelected(this.files && this.files[0]);
+            this.value = '';
+        });
+
+        function renderPhotoAnalysis(fileName) {
+            document.getElementById('wikiTitle').textContent = '相关知识点 · 力学与几何';
+            document.getElementById('wikiContent').textContent = '根据题目图片识别，本题涉及勾股定理与力的分解，建议结合相关微课与 AR 实验巩固。';
+            document.getElementById('photoOcrText').textContent = '识别题目（模拟）：已知直角三角形两直角边分别为 3 cm 和 4 cm，求斜边长度；并判断 5 N 的力沿 37° 分解后的水平分量。';
+            document.getElementById('photoAnswerSteps').innerHTML = `
+                <strong>解题步骤：</strong>
+                <ol>
+                    <li>勾股定理：斜边 c = √(3² + 4²) = √25 = 5 cm</li>
+                    <li>力的分解：水平分量 F<sub>x</sub> = F·cos37° ≈ 5 × 0.8 = 4 N</li>
+                    <li>检验：结果符合直角三角形 3-4-5 模型及三角函数分解规律</li>
+                </ol>
+                <p style="margin-top:10px;font-size:13px;color:var(--text-muted);">图片来源：${fileName} · 测试账户「学海启航」演示解析</p>`;
+            document.getElementById('photoResultBlock').style.display = 'block';
+            document.getElementById('examTypesSection').style.display = 'none';
+            document.getElementById('relatedList').innerHTML = mockRelated.slice(0, 3).map(r =>
+                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
+            ).join('');
+            document.getElementById('suggestList').innerHTML = ['勾股定理应用', '力的分解', '相似题目练习'].map(s =>
+                `<span class="tag tag-primary" style="cursor:pointer;">${s}</span>`
+            ).join('');
+        }
+
+        btnAnalyzePhoto.addEventListener('click', function () {
+            if (!selectedPhotoFile) {
+                showNotification('请先上传题目图片', 'warning');
+                return;
+            }
+            document.getElementById('emptyHint').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'block';
+            document.getElementById('photoResultBlock').style.display = 'none';
+            document.getElementById('photoAnalyzing').classList.add('show');
+            btnAnalyzePhoto.disabled = true;
+            btnAnalyzePhoto.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 识别中…';
+            setTimeout(function () {
+                document.getElementById('photoAnalyzing').classList.remove('show');
+                renderPhotoAnalysis(selectedPhotoFile.name);
+                btnAnalyzePhoto.disabled = false;
+                btnAnalyzePhoto.textContent = '开始识别解析';
+                showNotification('题目识别完成，已生成解析', 'success');
+                document.getElementById('searchResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1200);
+        });
+
         document.getElementById('btnSearch').onclick = function() {
             const q = document.getElementById('queryInput').value.trim();
             if (!q) { showNotification('请输入搜索关键词', 'warning'); return; }
             document.getElementById('emptyHint').style.display = 'none';
             document.getElementById('searchResults').style.display = 'block';
-            const key = Object.keys(mockWiki).find(k => q.indexOf(k) >= 0) || Object.keys(mockWiki)[0];
-            document.getElementById('wikiTitle').textContent = key + ' - 知识点百科';
-            document.getElementById('wikiContent').textContent = mockWiki[key] || '暂无该知识点百科，请尝试其他关键词。';
-            document.getElementById('relatedList').innerHTML = mockRelated.map(r =>
-                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
-            ).join('');
-            document.getElementById('suggestList').innerHTML = mockSuggest.map(s =>
-                `<span class="tag tag-primary" style="cursor:pointer;">${s}</span>`
-            ).join('');
+            renderTextSearchResults(q);
         };
     </script>
 </body>

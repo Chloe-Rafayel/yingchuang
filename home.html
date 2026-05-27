@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>首页 - 萤窗星途智慧教育平台</title>
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .home-hero {
@@ -28,7 +29,6 @@
             content: "";
             position: absolute;
             inset: 0;
-            /* 让图片整体更浅、更适合黑色中心文字 */
             background:
                 linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(219, 234, 254, 0.65) 45%, rgba(255, 255, 255, 0.82) 100%),
                 radial-gradient(700px 220px at 18% 90%, rgba(47, 158, 68, 0.22), transparent 60%),
@@ -54,7 +54,7 @@
         .home-hero-line2 {
             font-size: 44px;
             font-weight: 900;
-            color: #0f172a; /* 按需求：第二行黑色 */
+            color: #0f172a;
             margin-bottom: 8px;
             white-space: nowrap;
         }
@@ -64,12 +64,11 @@
             color: rgba(15, 23, 42, 0.72);
             white-space: nowrap;
         }
+        .header-center .search-box { position: relative; }
+        .header-right { position: relative; }
         @media (max-width: 520px) {
-            .home-hero { height: 520px; }
-            .home-hero { width: 100%; margin-left: 0; margin-right: 0; }
-            .home-hero-line1,
-            .home-hero-line2,
-            .home-hero-line3 { white-space: normal; }
+            .home-hero { height: 520px; width: 100%; margin-left: 0; margin-right: 0; }
+            .home-hero-line1, .home-hero-line2, .home-hero-line3 { white-space: normal; }
             .home-hero-line2 { font-size: 34px; }
         }
     </style>
@@ -81,12 +80,26 @@
         </div>
         <div class="header-center">
             <div class="search-box">
-                <input type="text" placeholder="搜索课程、知识点、教师..." id="globalSearch" onfocus="window.location.href='assistant.html'">
+                <input type="text" placeholder="搜索课程、知识点、教师..." id="globalSearch" autocomplete="off">
                 <i class="fas fa-search"></i>
+                <div class="home-search-dropdown" id="searchDropdown"></div>
             </div>
         </div>
         <div class="header-right">
-            <div class="notification-icon"><i class="fas fa-bell"></i><span class="notification-badge">2</span></div>
+            <div class="notification-icon" id="notifyIcon" title="消息通知">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notifyBadge">2</span>
+            </div>
+            <div class="home-notify-panel" id="notifyPanel">
+                <div class="home-notify-head">
+                    <span>消息通知</span>
+                    <span style="font-size:12px;color:var(--text-muted);font-weight:400;">测试账户</span>
+                </div>
+                <div class="home-notify-list" id="notifyList"></div>
+                <div class="home-notify-foot">
+                    <button type="button" id="notifyClearAll">全部标记已读</button>
+                </div>
+            </div>
             <div class="user-menu" onclick="toggleUserMenu()">
                 <div class="user-avatar"><i class="fas fa-user"></i></div>
                 <span class="user-name" id="userName">学海启航</span>
@@ -111,101 +124,246 @@
     </div>
 
     <main class="main-content">
+        <!-- 1. Hero + CTA -->
         <div class="home-hero" aria-label="平台主视觉">
             <div class="home-hero-content">
                 <div class="home-hero-line1">萤窗星途 | 智慧教育云平台</div>
                 <div class="home-hero-line2">用科技为教育赋能</div>
                 <div class="home-hero-line3">E m p o w e r  e d u c a t i o n  w i t h  t e c h n o l o g y</div>
+                <div class="home-hero-actions">
+                    <button type="button" class="home-hero-btn primary" id="heroStartBtn"><i class="fas fa-play"></i> 继续学习</button>
+                    <button type="button" class="home-hero-btn secondary" id="heroReportBtn"><i class="fas fa-file-alt"></i> 查看学习报告</button>
+                </div>
             </div>
         </div>
-        <div class="welcome-section card" style="margin-bottom:20px;">
-            <h1 style="font-size:20px;margin-bottom:6px;">欢迎回来，<span id="welcomeUser">学海启航</span></h1>
-            <p style="color:var(--text-muted);font-size:14px;">融合 AI 与 AR，点亮你的知识星途</p>
-        </div>
 
-        <section class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">最新资源</h2>
-            <div class="grid grid-3" id="featuredList">
-                <!-- 由 JS 填充 -->
+        <!-- 2. 欢迎 + 签到 + 数据概览 -->
+        <section class="card home-welcome-card" style="margin-bottom:20px;">
+            <div class="home-welcome-top">
+                <div>
+                    <h1 style="font-size:20px;margin-bottom:4px;"><span id="welcomeGreet">下午好</span>，<span id="welcomeUser">学海启航</span></h1>
+                    <p class="home-welcome-meta" id="welcomeMeta">初二 · 初二（3）班 · 测试账户 000000</p>
+                </div>
+                <button type="button" class="home-checkin-btn" id="checkinBtn"><i class="fas fa-calendar-check"></i> 每日签到</button>
+            </div>
+            <div class="home-stat-grid">
+                <div class="home-stat-card" data-stat="week">
+                    <div class="label">本周学习</div>
+                    <div class="value" id="statWeekHours">18.0h</div>
+                    <div class="sub">点击查看详情</div>
+                </div>
+                <div class="home-stat-card" data-stat="score">
+                    <div class="label">综合得分</div>
+                    <div class="value" id="statOverallScore">89</div>
+                    <div class="sub">生成学习报告</div>
+                </div>
+                <div class="home-stat-card" data-stat="streak">
+                    <div class="label">连续签到</div>
+                    <div class="value"><span id="statStreak">5</span><span style="font-size:14px;font-weight:500;"> 天</span></div>
+                    <div class="sub">坚持打卡</div>
+                </div>
+                <div class="home-stat-card" data-stat="course">
+                    <div class="label">进行中课程</div>
+                    <div class="value" id="statCourses">2</div>
+                    <div class="sub">进入我的课程</div>
+                </div>
             </div>
         </section>
 
-        <section class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">热门学科</h2>
-            <div class="grid grid-4" id="subjectGrid">
-                <!-- 由 JS 填充 -->
+        <!-- 3. 学习工具（五个完整功能） -->
+        <section class="card home-tools-section" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-toolbox"></i> 学习工具</h2>
+                <span class="tag tag-primary">测试账户可用</span>
+            </div>
+            <div class="home-tools-tabs" id="toolsTabs">
+                <button type="button" class="home-tools-tab active" data-tool="timer"><i class="fas fa-stopwatch"></i> 学习计时器</button>
+                <button type="button" class="home-tools-tab" data-tool="wrongbook"><i class="fas fa-book-medical"></i> 错题本</button>
+                <button type="button" class="home-tools-tab" data-tool="countdown"><i class="fas fa-hourglass-half"></i> 考试倒计时</button>
+                <button type="button" class="home-tools-tab" data-tool="quiz"><i class="fas fa-dice"></i> 随机刷题</button>
+                <button type="button" class="home-tools-tab" data-tool="notes"><i class="fas fa-sticky-note"></i> 学习笔记</button>
+            </div>
+
+            <!-- 学习计时器 -->
+            <div class="home-tools-panel active" id="toolPanelTimer">
+                <div class="home-timer-display" id="timerDisplay">25:00</div>
+                <p class="home-tools-desc">专注学习计时，完成后自动记入测试账户本周学习时长</p>
+                <div class="home-timer-presets">
+                    <button type="button" class="home-chip timer-preset active" data-min="25">25 分钟</button>
+                    <button type="button" class="home-chip timer-preset" data-min="45">45 分钟</button>
+                    <button type="button" class="home-chip timer-preset" data-min="15">15 分钟</button>
+                </div>
+                <div class="home-tools-actions">
+                    <button type="button" class="btn-primary" id="timerStartBtn"><i class="fas fa-play"></i> 开始</button>
+                    <button type="button" class="btn-secondary" id="timerPauseBtn"><i class="fas fa-pause"></i> 暂停</button>
+                    <button type="button" class="btn-secondary" id="timerResetBtn"><i class="fas fa-redo"></i> 重置</button>
+                </div>
+                <p class="home-tools-meta" id="timerLog">今日已累计专注 0 分钟</p>
+            </div>
+
+            <!-- 错题本 -->
+            <div class="home-tools-panel" id="toolPanelWrongbook">
+                <form class="home-wrong-form" id="wrongBookForm">
+                    <input type="text" class="input-field" id="wrongSubject" placeholder="学科，如：数学" required>
+                    <input type="text" class="input-field" id="wrongTitle" placeholder="错题内容或知识点" required>
+                    <input type="text" class="input-field" id="wrongReason" placeholder="错误原因，如：计算失误">
+                    <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> 加入错题本</button>
+                </form>
+                <ul class="home-wrong-list" id="wrongBookList"></ul>
+            </div>
+
+            <!-- 考试倒计时 -->
+            <div class="home-tools-panel" id="toolPanelCountdown">
+                <form class="home-countdown-form" id="countdownForm">
+                    <input type="text" class="input-field" id="examName" placeholder="考试名称，如：期中数学" required>
+                    <input type="date" class="input-field" id="examDate" required>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> 保存倒计时</button>
+                </form>
+                <div class="home-countdown-display" id="countdownDisplay">
+                    <p class="home-tools-desc">设置考试日期后，将在此显示倒计时</p>
+                </div>
+            </div>
+
+            <!-- 随机刷题 -->
+            <div class="home-tools-panel" id="toolPanelQuiz">
+                <div class="home-quiz-card" id="quizCard">
+                    <div class="home-quiz-meta" id="quizMeta">点击「抽一题」从 7800 知识点中随机抽取</div>
+                    <h3 class="home-quiz-title" id="quizTitle">—</h3>
+                    <p class="home-quiz-desc" id="quizDesc"></p>
+                    <div id="quizExamTypes"></div>
+                </div>
+                <div class="home-tools-actions">
+                    <button type="button" class="btn-primary" id="btnDrawQuiz"><i class="fas fa-random"></i> 抽一题</button>
+                    <a href="#" class="btn-secondary" id="quizDetailLink" style="display:none;text-align:center;line-height:1.2;">查看知识点</a>
+                </div>
+            </div>
+
+            <!-- 学习笔记 -->
+            <div class="home-tools-panel" id="toolPanelNotes">
+                <form class="home-notes-form" id="notesForm">
+                    <input type="text" class="input-field" id="noteTitle" placeholder="笔记标题" required>
+                    <textarea class="input-field" id="noteContent" rows="3" placeholder="记录学习心得、公式、要点…" required></textarea>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> 保存笔记</button>
+                </form>
+                <ul class="home-notes-list" id="notesList"></ul>
             </div>
         </section>
 
+        <!-- 4. 快捷入口 -->
         <section class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">综合推荐</h2>
-            <div class="grid grid-3" id="latestList">
-                <!-- 由 JS 填充 -->
+            <div class="home-section-head">
+                <h2><i class="fas fa-th-large"></i> 快捷入口</h2>
+            </div>
+            <div class="home-quick-grid" id="quickLinksGrid"></div>
+        </section>
+
+        <!-- 4. 继续学习 -->
+        <section class="card" id="continueSection" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-book-reader"></i> 继续学习</h2>
+                <a href="profile-courses.html" class="home-btn-sm">全部课程</a>
+            </div>
+            <div class="grid grid-2" id="continueLearningList"></div>
+        </section>
+
+        <!-- 5. 学情分析 + 成绩 -->
+        <section class="card" id="analyticsSection" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-chart-bar"></i> 学情分析</h2>
+                <div class="home-section-actions">
+                    <button type="button" class="home-btn-sm primary" id="btnGenerateReport"><i class="fas fa-file-export"></i> 生成报告</button>
+                </div>
+            </div>
+            <div class="home-analytics-grid">
+                <div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">本周学习时长（测试账户）</div>
+                    <div class="home-chart-wrap">
+                        <div class="home-chart-bars" id="weeklyChart"></div>
+                    </div>
+                    <p id="chartTip" style="font-size:12px;color:var(--text-muted);margin-top:10px;text-align:center;">点击柱状图查看每日学习时长</p>
+                </div>
+                <div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">各科成绩 · 班级排名 <span id="statRank" style="color:var(--primary);font-weight:600;">#8</span></div>
+                    <div class="home-score-list" id="scoreList"></div>
+                    <p id="scoreDetail" style="font-size:13px;margin-top:12px;padding:10px 12px;background:var(--bg-muted);border-radius:10px;"></p>
+                </div>
             </div>
         </section>
 
+        <!-- 6. 今日任务 -->
+        <section class="card" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-tasks"></i> 今日学习任务</h2>
+                <span class="tag tag-primary" id="taskProgress">0/4 已完成</span>
+            </div>
+            <ul class="home-task-list" id="taskList"></ul>
+        </section>
+
+        <!-- 7. 最新资源（学科筛选） -->
+        <section class="card" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-film"></i> 最新资源</h2>
+                <div class="home-section-actions" id="subjectFilterChips"></div>
+            </div>
+            <div class="grid grid-3" id="featuredList"></div>
+        </section>
+
+        <!-- 8. 热门学科 -->
+        <section class="card" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-fire"></i> 热门学科</h2>
+            </div>
+            <div class="grid grid-4" id="subjectGrid"></div>
+        </section>
+
+        <!-- 9. 综合推荐 -->
+        <section class="card" style="margin-bottom:20px;">
+            <div class="home-section-head">
+                <h2><i class="fas fa-star"></i> 综合推荐</h2>
+            </div>
+            <div class="grid grid-3" id="latestList"></div>
+        </section>
+
+        <!-- 10. 平台动态 -->
         <section class="card">
-            <h2 style="font-size:16px;margin-bottom:14px;color:var(--text);">平台动态</h2>
-            <ul style="list-style:none;">
-                <li style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-                    <span>全国 AR 实验创意大赛报名开启</span>
-                    <span style="font-size:12px;color:var(--text-muted);">03-10</span>
-                </li>
-                <li style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-                    <span>智学助手 24 小时答疑上线</span>
-                    <span style="font-size:12px;color:var(--text-muted);">03-08</span>
-                </li>
-                <li style="padding:10px 0;display:flex;justify-content:space-between;align-items:center;">
-                    <span>知识秘境多人探秘活动预告</span>
-                    <span style="font-size:12px;color:var(--text-muted);">03-05</span>
-                </li>
-            </ul>
+            <div class="home-section-head">
+                <h2><i class="fas fa-bullhorn"></i> 平台动态</h2>
+            </div>
+            <ul class="home-news-list" id="newsList"></ul>
         </section>
     </main>
 
+    <!-- 学习报告弹窗 -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-content" style="max-width:560px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-pie" style="color:var(--primary);margin-right:8px;"></i>周学习报告</h3>
+                <span class="modal-close" data-close-modal="reportModal">&times;</span>
+            </div>
+            <div id="reportModalBody"></div>
+            <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
+                <button type="button" class="btn-secondary" data-close-modal="reportModal">关闭</button>
+                <button type="button" class="btn-primary" id="btnDownloadReport"><i class="fas fa-download"></i> 下载报告</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 平台动态弹窗 -->
+    <div class="modal-overlay" id="newsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="newsModalTitle">平台动态</h3>
+                <span class="modal-close" data-close-modal="newsModal">&times;</span>
+            </div>
+            <div id="newsModalBody"></div>
+            <div style="margin-top:20px;text-align:right;">
+                <button type="button" class="btn-primary" id="newsModalAction">确定</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/common.js"></script>
-    <script>
-        const user = getCurrentUser();
-        if (user) {
-            document.getElementById('welcomeUser').textContent = user.nickname || '学海启航';
-            const nameEl = document.getElementById('userName');
-            if (nameEl) nameEl.textContent = user.nickname || '学海启航';
-        }
-        const featuredResources = [
-            { title: '食物中的淀粉：碘液检测实验', type: '视频', subject: '化学', cover: 'img/0001.jpg', author: '萤窗教研组', verified: true, playCount: 2140, video: 'vid/化学检测食物中的淀粉.mp4' },
-            { title: '含羞草为什么会动', type: '视频', subject: '生物', cover: 'img/0002.jpg', author: '萤窗教研组', verified: true, playCount: 1890, video: 'vid/生物含羞草为什么会动.mp4' },
-            { title: '石油的生成过程', type: '视频', subject: '物理', cover: 'img/0003.jpg', author: '萤窗教研组', verified: true, playCount: 1650, video: 'vid/物理石油的生成过程.mp4' }
-        ];
-        const latestResources = [
-            { title: '为什么鸡蛋不能放进微波炉', type: '视频', subject: '科普', cover: 'img/0004.jpg', author: '萤窗科普', verified: true, playCount: 3420, video: 'vid/科普为什么鸡蛋不能放进微波炉.mp4' },
-            { title: '如何预防呼吸道疾病', type: '视频', subject: '科普', cover: 'img/0005.jpg', author: '萤窗科普', verified: true, playCount: 2960, video: 'vid/科普如何预防呼吸道疾病.mp4' },
-            { title: '纸巾过滤小实验', type: '视频', subject: '科普', cover: 'img/0006.jpg', author: '萤窗科普', verified: true, playCount: 1780, video: 'vid/科普纸巾过滤.mp4' }
-        ];
-        function renderResourceCard(r) {
-            const href = r.video
-                ? `video-play.html?src=${encodeURIComponent(r.video)}&title=${encodeURIComponent(r.title)}`
-                : `resource-detail.html?id=${r.id}`;
-            return `<a href="${href}" class="resource-card">
-                <img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0001.jpg'">
-                <div class="info">
-                    <div class="title">${r.title}</div>
-                    <div class="meta">
-                        <span>${r.type}</span>
-                        <span>${r.author}${r.verified ? ' <i class="fas fa-check-circle" style="color:var(--teacher-badge);font-size:10px;"></i>' : ''}</span>
-                        <span><i class="fas fa-play"></i> ${(r.playCount/1000).toFixed(1)}k</span>
-                    </div>
-                </div>
-            </a>`;
-        }
-        document.getElementById('featuredList').innerHTML = featuredResources.map(renderResourceCard).join('');
-        document.getElementById('latestList').innerHTML = latestResources.map(renderResourceCard).join('');
-        const subjects = ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理'];
-        document.getElementById('subjectGrid').innerHTML = subjects.map(s =>
-            `<a href="subject-detail.html?name=${encodeURIComponent(s)}" class="card" style="text-align:center;padding:16px;">
-                <i class="fas fa-book-open" style="font-size:28px;color:var(--primary);margin-bottom:8px;"></i>
-                <div class="card-title">${s}</div>
-            </a>`
-        ).join('');
-    </script>
+    <script src="js/knowledge-base.js"></script>
+    <script src="js/home.js"></script>
 </body>
 </html>

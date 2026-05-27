@@ -6,11 +6,19 @@
     <title>知识点分类 - 萤窗星途智慧教育平台</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .kp-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+        .kp-stat-tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(79,70,229,0.1); color: var(--primary); }
+        .kp-toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+        .kp-toolbar .select-field { max-width: 140px; }
+        .kp-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+        .kp-page-info { font-size: 13px; color: var(--text-muted); }
+    </style>
 </head>
 <body class="has-top-nav">
     <header class="header">
         <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
-        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索知识点..." onfocus="location.href='assistant.html'"><i class="fas fa-search"></i></div></div>
+        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索知识点..." id="kpSearch"><i class="fas fa-search"></i></div></div>
         <div class="header-right">
             <div class="notification-icon"><i class="fas fa-bell"></i></div>
             <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
@@ -34,41 +42,107 @@
 
     <main class="main-content">
         <div class="card" style="margin-bottom:20px;">
-            <p style="color:var(--text-muted);font-size:14px;">按教材章节、知识点模块分类，系统构建知识体系。</p>
-            <div style="margin-top:12px;">
-                <select class="select-field" style="max-width:200px;" id="filterSubject">
-                    <option value="">全部学科</option>
-                    <option>数学</option><option>物理</option><option>化学</option><option>生物</option><option>历史</option><option>地理</option>
+            <p style="color:var(--text-muted);font-size:14px;">按年级、学科分类浏览智学助手知识库，每个知识点含 3 道常考题型。</p>
+            <div class="kp-stats" id="kpStats"></div>
+            <div class="kp-toolbar">
+                <select class="select-field" id="filterStage">
+                    <option value="">全部学段</option>
+                    <option value="primary">小学</option>
+                    <option value="secondary">初高中</option>
                 </select>
-                <select class="select-field" style="max-width:120px;margin-left:8px;" id="filterDifficulty">
-                    <option value="">难度</option>
-                    <option>易</option><option>中</option><option>难</option>
+                <select class="select-field" id="filterGrade"><option value="">全部年级</option></select>
+                <select class="select-field" id="filterSubject"><option value="">全部学科</option></select>
+                <select class="select-field" id="filterDifficulty">
+                    <option value="">全部难度</option>
+                    <option value="易">易</option>
+                    <option value="中">中</option>
+                    <option value="难">难</option>
                 </select>
             </div>
         </div>
         <div class="card">
             <h2 style="font-size:16px;margin-bottom:14px;">知识点列表</h2>
             <div class="grid grid-2" id="kpList"></div>
+            <div class="kp-pagination">
+                <button type="button" class="btn-secondary" id="btnPrevPage">上一页</button>
+                <span class="kp-page-info" id="pageInfo">第 1 页</span>
+                <button type="button" class="btn-secondary" id="btnNextPage">下一页</button>
+            </div>
         </div>
     </main>
 
     <script src="js/common.js"></script>
+    <script src="js/knowledge-base.js"></script>
     <script>
-        const kps = [
-            { id: 1, name: '勾股定理', subject: '数学', grade: '初二', difficulty: '中', desc: '直角三角形两直角边平方和等于斜边平方。' },
-            { id: 2, name: '牛顿第二定律', subject: '物理', grade: '高一', difficulty: '中', desc: 'F=ma，力与加速度、质量的关系。' },
-            { id: 3, name: '光合作用', subject: '生物', grade: '初一', difficulty: '中', desc: '绿色植物在光下合成有机物、释放氧气。' },
-            { id: 4, name: '氧化还原反应', subject: '化学', grade: '高一', difficulty: '中', desc: '得失电子、化合价升降的反应。' },
-            { id: 5, name: '三角函数', subject: '数学', grade: '高一', difficulty: '中', desc: '正弦、余弦、正切与单位圆。' },
-            { id: 6, name: '细胞分裂', subject: '生物', grade: '高一', difficulty: '难', desc: '有丝分裂与减数分裂过程。' }
-        ];
-        document.getElementById('kpList').innerHTML = kps.map(k =>
-            `<a href="knowledge-detail.html?id=${k.id}" class="card" style="display:block;">
-                <div class="card-title">${k.name}</div>
-                <div class="card-subtitle">${k.subject} · ${k.grade} · 难度${k.difficulty}</div>
-                <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">${k.desc}</p>
-            </a>`
-        ).join('');
+        let currentPage = 1;
+        const pageSize = 20;
+
+        function fillGradeOptions() {
+            const stage = document.getElementById('filterStage').value;
+            const gradeEl = document.getElementById('filterGrade');
+            const grades = stage === 'primary' ? KnowledgeBase.PRIMARY_GRADES
+                : stage === 'secondary' ? KnowledgeBase.SECONDARY_GRADES
+                : KnowledgeBase.getGradesForFilter();
+            gradeEl.innerHTML = '<option value="">全部年级</option>' + grades.map(g => `<option>${g}</option>`).join('');
+        }
+
+        function fillSubjectOptions() {
+            const stage = document.getElementById('filterStage').value;
+            const subEl = document.getElementById('filterSubject');
+            const subs = KnowledgeBase.getSubjectsForFilter(stage || undefined);
+            subEl.innerHTML = '<option value="">全部学科</option>' + subs.map(s => `<option>${s}</option>`).join('');
+        }
+
+        function renderStats() {
+            const s = KnowledgeBase.getStats();
+            document.getElementById('kpStats').innerHTML = `
+                <span class="kp-stat-tag">共 ${s.total.toLocaleString()} 个知识点</span>
+                <span class="kp-stat-tag">小学 ${s.primary.toLocaleString()} · 初高 ${s.secondary.toLocaleString()}</span>
+                <span class="kp-stat-tag">常考题型 ${s.examTypesTotal.toLocaleString()} 道</span>`;
+        }
+
+        function renderList() {
+            const result = KnowledgeBase.searchKnowledgePoints({
+                q: document.getElementById('kpSearch').value,
+                grade: document.getElementById('filterGrade').value,
+                subject: document.getElementById('filterSubject').value,
+                difficulty: document.getElementById('filterDifficulty').value,
+                page: currentPage,
+                pageSize: pageSize
+            });
+            document.getElementById('pageInfo').textContent =
+                `第 ${result.page} / ${result.totalPages} 页 · 共 ${result.total.toLocaleString()} 条`;
+            document.getElementById('kpList').innerHTML = result.items.length ? result.items.map(k =>
+                `<a href="knowledge-detail.html?id=${k.id}" class="card" style="display:block;">
+                    <div class="card-title">${k.name}</div>
+                    <div class="card-subtitle">${k.subject} · ${k.grade} · 难度${k.difficulty}</div>
+                    <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">${k.desc.slice(0, 60)}…</p>
+                    <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+                        ${k.examTypes.map(e => `<span class="tag tag-primary">${e.type}</span>`).join('')}
+                    </div>
+                </a>`
+            ).join('') : '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-search"></i><p>未找到匹配的知识点</p></div>';
+            document.getElementById('btnPrevPage').disabled = currentPage <= 1;
+            document.getElementById('btnNextPage').disabled = currentPage >= result.totalPages;
+        }
+
+        document.getElementById('filterStage').addEventListener('change', function () {
+            fillGradeOptions();
+            fillSubjectOptions();
+            currentPage = 1;
+            renderList();
+        });
+        ['filterGrade', 'filterSubject', 'filterDifficulty'].forEach(id => {
+            document.getElementById(id).addEventListener('change', function () { currentPage = 1; renderList(); });
+        });
+        document.getElementById('kpSearch').addEventListener('input', function () { currentPage = 1; renderList(); });
+        document.getElementById('btnPrevPage').addEventListener('click', function () { if (currentPage > 1) { currentPage--; renderList(); } });
+        document.getElementById('btnNextPage').addEventListener('click', function () { currentPage++; renderList(); });
+
+        fillGradeOptions();
+        fillSubjectOptions();
+        renderStats();
+        renderList();
     </script>
 </body>
 </html>
