@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>学科分类 - 萤窗星途智慧教育平台</title>
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/course-catalog.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="has-top-nav">
     <header class="header">
         <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
-        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索学科、资源..." onfocus="location.href='assistant.html'"><i class="fas fa-search"></i></div></div>
+        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索课程、学科..." onfocus="location.href='assistant.html'"><i class="fas fa-search"></i></div></div>
         <div class="header-right">
             <div class="notification-icon"><i class="fas fa-bell"></i></div>
             <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
@@ -33,50 +34,29 @@
     </div>
 
     <main class="main-content">
-        <div class="card" style="margin-bottom:20px;">
-            <h2 style="font-size:16px;margin-bottom:14px;">按学科与年级筛选</h2>
-            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
-                <select class="select-field" style="width:auto;min-width:120px;" id="filterSubject">
-                    <option value="">全部学科</option>
-                    <option>语文</option><option>数学</option><option>英语</option><option>物理</option><option>化学</option><option>生物</option><option>历史</option><option>地理</option>
-                </select>
-                <select class="select-field" style="width:auto;min-width:100px;" id="filterGrade">
-                    <option value="">全部年级</option>
-                    <option>初一</option><option>初二</option><option>初三</option><option>高一</option><option>高二</option><option>高三</option>
-                </select>
-                <select class="select-field" style="width:auto;min-width:100px;" id="filterType">
-                    <option value="">资源类型</option>
-                    <option>视频</option><option>AR实验</option><option>微课</option><option>课件</option><option>习题</option>
-                </select>
-            </div>
+        <div class="catalog-page-title">
+            <h1><i class="fas fa-layer-group"></i> 课程体系 · 按年龄学段</h1>
+            <p>幼儿园以拼音识字为主；小学至高中按学科系统学习；科普课程独立分类。每个学段精选 6 门代表课程，更多课程可查看该学段全部收录。</p>
         </div>
-        <div class="card">
-            <h2 style="font-size:16px;margin-bottom:14px;">学科资源列表</h2>
-            <div class="grid grid-3" id="resourceList"></div>
-        </div>
+        <nav class="catalog-nav-chips" id="catalogNav"></nav>
+        <div id="catalogRoot"></div>
     </main>
 
     <script src="js/common.js"></script>
+    <script src="js/course-catalog.js"></script>
     <script>
-        const list = [
-            { id: 1, title: '勾股定理的证明与应用', type: '微课', subject: '数学', grade: '初二', cover: 'img/0007.jpg', author: '张老师', verified: true, playCount: 3200 },
-            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', subject: '物理', grade: '高一', cover: 'img/0008.jpg', author: '李老师', verified: true, playCount: 1890 },
-            { id: 3, title: '光合作用全过程', type: '视频', subject: '生物', grade: '初一', cover: 'img/0009.jpg', author: '王老师', verified: false, playCount: 2100 },
-            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', subject: '历史', grade: '初一', cover: 'img/0010.jpg', author: '陈老师', verified: true, playCount: 980 },
-            { id: 5, title: '氧化还原反应方程式', type: '微课', subject: '化学', grade: '高一', cover: 'img/0011.jpg', author: '刘老师', verified: true, playCount: 1650 },
-            { id: 6, title: '地球运动与昼夜交替', type: 'AR实验', subject: '地理', grade: '初一', cover: 'img/0012.jpg', author: '赵老师', verified: true, playCount: 1100 }
-        ];
-        function render(r) {
-            return `<a href="resource-detail.html?id=${r.id}" class="resource-card">
-                <img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0007.jpg'">
-                <div class="info"><div class="title">${r.title}</div>
-                <div class="meta"><span class="tag tag-primary">${r.type}</span> ${r.subject} · ${r.grade} · ${(r.playCount/1000).toFixed(1)}k 播放</div></div>
-            </a>`;
-        }
-        document.getElementById('resourceList').innerHTML = list.map(render).join('');
-        [document.getElementById('filterSubject'), document.getElementById('filterGrade'), document.getElementById('filterType')].forEach(el => {
-            if (el) el.addEventListener('change', function() { document.getElementById('resourceList').innerHTML = list.map(render).join(''); });
-        });
+        (function () {
+            const user = getCurrentUser();
+            if (user && document.getElementById('userName')) {
+                document.getElementById('userName').textContent = user.nickname || '学海启航';
+            }
+        })();
+        CourseCatalog.renderCatalogPage('catalogRoot');
+        document.getElementById('catalogNav').innerHTML =
+            CourseCatalog.STAGES.map(function (s) {
+                return '<a href="#stage-' + s.id + '" class="catalog-nav-chip">' + s.label + ' ' + s.age + '</a>';
+            }).join('') +
+            '<a href="#stage-science" class="catalog-nav-chip">科普课程</a>';
     </script>
 </body>
 </html>

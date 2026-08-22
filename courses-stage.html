@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全部课程 - 萤窗星途智慧教育平台</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/course-catalog.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left"><a href="javascript:history.back()" class="logo"><i class="fas fa-arrow-left" style="font-size:18px;"></i></a></div>
+        <div class="header-center"><span style="font-weight:600;" id="pageTitle">全部课程</span></div>
+        <div class="header-right"></div>
+    </header>
+    <main class="main-content">
+        <div class="catalog-stage-banner" id="stageBanner"></div>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;" id="stageHint"></p>
+        <div id="courseGrid"></div>
+    </main>
+    <script src="js/common.js"></script>
+    <script src="js/course-catalog.js"></script>
+    <script>
+        const stageId = getUrlParam('stage') || 'senior';
+        const stage = CourseCatalog.getStage(stageId);
+        if (!stage) {
+            document.getElementById('courseGrid').innerHTML = '<div class="empty-state"><p>未找到该学段</p><a href="courses.html">返回课程体系</a></div>';
+        } else {
+            document.title = stage.label + '全部课程 - 萤窗星途';
+            document.getElementById('pageTitle').textContent = stage.label + ' · 全部课程';
+            document.getElementById('stageBanner').style.background = 'linear-gradient(135deg, ' + stage.theme + ', ' + stage.theme + 'cc)';
+            document.getElementById('stageBanner').innerHTML =
+                '<span class="catalog-stage-icon" style="background:rgba(255,255,255,0.2);width:56px;height:56px;font-size:24px;"><i class="fas ' + stage.icon + '"></i></span>' +
+                '<div><h1>' + stage.label + '</h1><p>' + stage.age + ' · 共 ' + stage.all.length + ' 门课程</p></div>';
+            document.getElementById('stageHint').textContent = stage.intro;
+            CourseCatalog.renderStagePage('courseGrid', stageId);
+        }
+    </script>
+</body>
+</html>

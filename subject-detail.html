@@ -41,10 +41,18 @@
         </div>
     </main>
     <script src="js/common.js"></script>
+    <script src="js/course-catalog.js"></script>
     <script>
         const name = getUrlParam('name') || '数学';
+        const stageId = getUrlParam('stage') || '';
+        const stage = stageId && typeof CourseCatalog !== 'undefined' ? CourseCatalog.getStage(stageId) : null;
+        const stageLabel = stage ? stage.label + '（' + stage.age + '）' : '';
         document.getElementById('subjectName').textContent = name;
-        document.getElementById('title').textContent = name;
+        document.getElementById('title').textContent = name + (stageLabel ? ' · ' + stageLabel : '');
+        if (stage) {
+            document.querySelector('.card p').textContent =
+                stage.label + '阶段「' + name + '」课程：' + (stage.intro || '学科介绍、课程大纲、认证教师推荐。');
+        }
         const list = mockData.resources.filter(r => r.subject === name).slice(0, 4);
         document.getElementById('relatedList').innerHTML = list.map(r =>
             `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/1.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`

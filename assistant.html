@@ -3,153 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智学助手 - 萤窗星途智慧教育平台</title>
+    <title>教育智能体 - 萤窗星途智慧教育平台</title>
     <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/assistant-agent.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .assistant-search {
-            width: calc(100vw - 60px);
-            max-width: none;
-            margin-left: calc(50% - 50vw + 30px);
-            margin-right: calc(50% - 50vw + 30px);
-            margin-top: 0;
-            margin-bottom: 24px;
-            min-height: 550px;
-            padding: 40px 36px 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        .assistant-search-bar {
-            margin-top: auto;
-            width: 100%;
-        }
-        .assistant-search-bar .search-box {
-            margin-bottom: 12px;
-        }
-        .assistant-search .search-box input {
-            padding: 22px 26px 22px 60px;
-            font-size: 19px;
-            border-radius: 36px;
-        }
-        .assistant-search .search-box i { font-size: 20px; }
-        .assistant-actions {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            row-gap: 24px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-            margin-bottom: 0;
-        }
-        .assistant-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 20px 36px;
-            background: var(--bg-card);
-            border-radius: 18px;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .assistant-action:hover { border-color: var(--primary); color: var(--primary); }
-        .assistant-action i { font-size: 32px; }
-        .result-section { margin-bottom: 24px; }
-        .result-section h3 { font-size: 16px; margin-bottom: 12px; color: var(--text); }
-        .wiki-card { background: linear-gradient(135deg, #f0f4ff, #e8eeff); border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 1px solid rgba(79,70,229,0.2); }
-        .wiki-card h4 { font-size: 17px; margin-bottom: 8px; color: var(--primary); }
-        .wiki-card p { font-size: 15px; color: var(--text); line-height: 1.7; }
-
-        #emptyHint {
-            width: calc(100vw - 60px);
-            max-width: none;
-            margin-left: calc(50% - 50vw + 30px);
-            margin-right: calc(50% - 50vw + 30px);
-        }
-
-        #photoInput { display: none; }
-
-        .photo-preview-wrap {
-            display: none;
-            margin-top: 20px;
-            padding: 16px;
-            border: 2px dashed var(--border);
-            border-radius: 16px;
-            background: var(--bg-muted);
-            text-align: center;
-        }
-        .photo-preview-wrap.show { display: block; }
-        .photo-preview-wrap img {
-            max-width: 100%;
-            max-height: 280px;
-            border-radius: 12px;
-            object-fit: contain;
-            background: white;
-            border: 1px solid var(--border);
-        }
-        .photo-preview-meta {
-            margin-top: 10px;
-            font-size: 12px;
-            color: var(--text-muted);
-            word-break: break-all;
-        }
-        .photo-preview-actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-        .photo-result-card {
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .photo-result-card h4 {
-            font-size: 16px;
-            color: #b45309;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .photo-result-card .steps {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text);
-        }
-        .photo-result-card .steps ol {
-            padding-left: 20px;
-            margin-top: 8px;
-        }
-        .photo-analyzing {
-            display: none;
-            text-align: center;
-            padding: 24px;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-        .photo-analyzing.show { display: block; }
-        .photo-analyzing i { font-size: 28px; color: var(--primary); margin-bottom: 10px; }
-
-        @media (max-width: 520px) {
-            .assistant-search {
-                width: calc(100vw - 60px);
-                margin-left: calc(50% - 50vw + 30px);
-                margin-right: calc(50% - 50vw + 30px);
-                min-height: 490px;
-                padding: 34px 18px 20px;
-            }
-        }
-    </style>
 </head>
 <body class="has-top-nav">
     <header class="header">
         <div class="header-left"><a href="home.html" class="logo"><i class="fas fa-graduation-cap"></i> 萤窗星途</a></div>
-        <div class="header-center"><div class="search-box"><input type="text" placeholder="搜索课程、知识点..." id="mainSearch"><i class="fas fa-search"></i></div></div>
+        <div class="header-center"><span style="font-weight:600;color:var(--text-muted);font-size:14px;">教育智能体</span></div>
         <div class="header-right">
             <div class="notification-icon"><i class="fas fa-bell"></i></div>
             <div class="user-menu" onclick="toggleUserMenu()"><div class="user-avatar"><i class="fas fa-user"></i></div><span class="user-name" id="userName">学海启航</span><i class="fas fa-chevron-down"></i></div>
@@ -171,253 +33,110 @@
         <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>退出登录</span></div>
     </div>
 
+    <!-- 首次学段选择 -->
+    <div class="agent-setup-overlay" id="setupOverlay">
+        <div class="agent-setup-box">
+            <h2><i class="fas fa-user-graduate" style="color:var(--primary);"></i> 选择你的学段</h2>
+            <p class="sub">首次使用请选择学段。智能体将按幼儿园～高中学校课程范围为你解答，<br>问什么答什么（作文提供范文片段，不代写完整全文）。</p>
+            <div class="agent-stage-grid">
+                <button type="button" class="agent-stage-btn" data-stage="kindergarten">
+                    <strong>幼儿园</strong><span>小班～大班</span>
+                </button>
+                <button type="button" class="agent-stage-btn" data-stage="primary">
+                    <strong>小学</strong><span>一至六年级</span>
+                </button>
+                <button type="button" class="agent-stage-btn" data-stage="junior">
+                    <strong>初中</strong><span>初一～初三</span>
+                </button>
+                <button type="button" class="agent-stage-btn" data-stage="senior">
+                    <strong>高中</strong><span>高一～高三</span>
+                </button>
+            </div>
+            <label for="setupTextbook">教材版本（可选）</label>
+            <select class="select-field" id="setupTextbook">
+                <option>暂不指定</option>
+                <option>人教版</option>
+                <option>北师大版</option>
+                <option>苏教版</option>
+                <option>外研版</option>
+                <option>沪教版</option>
+                <option>鲁教版</option>
+                <option>湘教版</option>
+                <option>粤教版</option>
+                <option>浙教版</option>
+                <option>冀教版</option>
+            </select>
+            <p class="agent-privacy-note">
+                <i class="fas fa-shield-alt"></i>
+                我们不会收集 14 岁以下用户的姓名、学校或联系方式。对话记录仅保存在本设备。
+            </p>
+            <button type="button" class="btn-primary" style="width:100%;" id="btnConfirmSetup">开始学习</button>
+        </div>
+    </div>
+
     <main class="main-content">
-        <h1 style="font-size:20px;margin-bottom:8px;text-align:center;">智学助手</h1>
-        <p style="text-align:center;color:var(--text-muted);font-size:14px;margin-bottom:24px;">关键词搜索 · 拍照搜题 · 智能答疑 · 知识追踪推荐</p>
-
-        <div class="assistant-search card">
-            <div class="assistant-actions">
-                <div class="assistant-action" onclick="document.getElementById('queryInput').focus();">
-                    <i class="fas fa-keyboard"></i>
-                    <span>文字输入</span>
-                </div>
-                <div class="assistant-action" onclick="showNotification('语音输入功能即将开放', 'info');">
-                    <i class="fas fa-microphone"></i>
-                    <span>语音输入</span>
-                </div>
-                <div class="assistant-action" id="photoAction">
-                    <i class="fas fa-camera"></i>
-                    <span>拍照搜题</span>
-                </div>
-            </div>
-            <div class="photo-preview-wrap" id="photoPreviewWrap">
-                <img id="photoPreview" src="" alt="题目图片预览">
-                <div class="photo-preview-meta" id="photoFileName"></div>
-                <div class="photo-preview-actions">
-                    <button type="button" class="btn-secondary" id="btnReuploadPhoto">重新选择</button>
-                    <button type="button" class="btn-accent" id="btnAnalyzePhoto">开始识别解析</button>
-                </div>
-            </div>
-            <input type="file" id="photoInput" accept="image/*">
-            <div class="assistant-search-bar">
-                <div class="search-box">
-                    <input type="text" id="queryInput" placeholder="输入知识点或题目关键词，如：勾股定理、牛顿第二定律、光合作用">
-                    <i class="fas fa-search"></i>
-                </div>
-                <button type="button" class="btn-primary" style="width:100%;" id="btnSearch">搜索</button>
-            </div>
+        <div class="agent-page-title">
+            <h1><i class="fas fa-robot" style="color:var(--primary);"></i> 教育智能体</h1>
+            <p>幼儿园～高中 · 专注课内学习 · 积极正面引导 · 作文提供范文片段</p>
+            <span class="agent-badge"><i class="fas fa-check-circle"></i> 未成年人安全约束已启用</span>
         </div>
 
-        <div id="searchResults" style="display:none;">
-            <div class="photo-analyzing" id="photoAnalyzing">
-                <div><i class="fas fa-spinner fa-spin"></i></div>
-                <p>正在识别题目图片，请稍候…</p>
+        <div class="agent-toolbar">
+            <div class="agent-toolbar-left">
+                <span class="tag tag-primary" id="toolbarStage">未设置学段</span>
+                <span class="tag" id="toolbarTextbook">暂不指定</span>
+                <button type="button" class="home-btn-sm" id="btnChangeStage"><i class="fas fa-edit"></i> 修改学段</button>
+                <button type="button" class="home-btn-sm" id="btnClearChat"><i class="fas fa-trash-alt"></i> 清空对话</button>
             </div>
-            <div id="photoResultBlock" style="display:none;">
-                <div class="photo-result-card">
-                    <h4><i class="fas fa-camera"></i> 拍照搜题 · AI 解析</h4>
-                    <p id="photoOcrText" style="font-size:14px;margin-bottom:12px;color:var(--text-muted);"></p>
-                    <div class="steps" id="photoAnswerSteps"></div>
-                </div>
-            </div>
-            <div class="wiki-card">
-                <h4 id="wikiTitle">知识点百科</h4>
-                <p id="wikiContent">加载中…</p>
-                <p style="font-size:12px;color:var(--text-muted);margin-top:8px;" id="wikiMeta"></p>
-            </div>
-            <div class="result-section card" id="examTypesSection" style="display:none;">
-                <h3>常考题型（3 道）</h3>
-                <div id="examTypesResult"></div>
-            </div>
-            <div class="result-section card">
-                <h3>匹配知识点</h3>
-                <div class="grid grid-2" id="matchedKpList"></div>
-            </div>
-            <div class="result-section card">
-                <h3>相关课程 / 资源</h3>
-                <div class="grid grid-2" id="relatedList"></div>
-            </div>
-            <div class="result-section card">
-                <h3>智能追问推荐</h3>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;" id="suggestList"></div>
-            </div>
+            <span class="agent-toolbar-meta" id="toolbarMeta">多轮记忆 · 本地保存</span>
         </div>
 
-        <div id="emptyHint" class="card empty-state">
-            <i class="fas fa-robot"></i>
-            <p>输入关键词搜索课程、习题与知识点百科，或使用拍照搜题获取解析。</p>
-            <p style="font-size:13px;margin-top:10px;color:var(--primary);" id="kbStatsHint"></p>
+        <div class="card agent-chat-wrap">
+            <div class="agent-chat-messages" id="chatMessages"></div>
+            <div id="photoPreviewBar" style="display:none;padding:8px 20px;background:white;border-top:1px solid var(--border);align-items:center;gap:10px;">
+                <img src="" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:8px;">
+                <span class="name" style="flex:1;font-size:12px;color:var(--text-muted);"></span>
+                <button type="button" class="home-btn-sm" id="btnRemovePhoto">移除</button>
+            </div>
+            <div class="agent-chat-input">
+                <div class="agent-input-row">
+                    <textarea id="chatInput" rows="1" placeholder="输入学校课程相关问题，如：初二数学勾股定理怎么用？"></textarea>
+                    <div class="agent-input-actions">
+                        <button type="button" class="agent-icon-btn" id="btnPhoto" title="拍照/上传题目"><i class="fas fa-camera"></i></button>
+                        <button type="button" class="agent-send-btn" id="btnSend" title="发送"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" hidden>
+                <p class="agent-input-hint">问什么答什么 · 超纲内容将礼貌提示 · 支持题目拍照 OCR</p>
+            </div>
         </div>
     </main>
 
     <script src="js/common.js"></script>
-    <script src="js/knowledge-base.js"></script>
+    <script src="js/config.js"></script>
     <script>
-        const mockRelated = [
-            { id: 1, title: '勾股定理的证明与应用', type: '微课', cover: 'img/0006.jpg' },
-            { id: 2, title: '牛顿第二定律AR实验', type: 'AR实验', cover: 'img/0007.jpg' },
-            { id: 3, title: '光合作用全过程', type: '视频', cover: 'img/0008.jpg' },
-            { id: 4, title: '古代文明遗址VR探秘', type: 'VR全景', cover: 'img/0009.jpg' },
-            { id: 5, title: '氧化还原反应方程式', type: '微课', cover: 'img/0010.jpg' },
-            { id: 6, title: '地球运动与昼夜交替', type: 'AR实验', cover: 'img/0011.jpg' }
-        ];
-        const mockSuggest = ['勾股定理逆定理', '三角函数', '力学综合', '错题归因分析'];
-
-        (function showKbStats() {
-            const s = KnowledgeBase.getStats();
-            const el = document.getElementById('kbStatsHint');
-            if (el) el.textContent = `知识库已收录 ${s.total.toLocaleString()} 个知识点 · ${s.examTypesTotal.toLocaleString()} 道常考题型`;
+        if (!window.EDU_AGENT_CONFIG) {
+            window.EDU_AGENT_CONFIG = {
+                apiProvider: 'zhipu',
+                apiModel: 'glm-4-flash',
+                useProxy: true,
+                proxyUrl: '/api/chat',
+                apiKey: ''
+            };
+        }
+    </script>
+    <script src="js/knowledge-base.js"></script>
+    <script src="js/curriculum-texts.js"></script>
+    <script src="js/edu-agent.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="js/assistant-ui.js"></script>
+    <script>
+        (function () {
+            const user = getCurrentUser();
+            if (user && document.getElementById('userName')) {
+                document.getElementById('userName').textContent = user.nickname || '学海启航';
+            }
         })();
-
-        function renderTextSearchResults(q) {
-            document.getElementById('photoResultBlock').style.display = 'none';
-            document.getElementById('photoAnalyzing').classList.remove('show');
-            const wiki = KnowledgeBase.searchWiki(q);
-            const matched = KnowledgeBase.searchKnowledgePoints({ q: q, pageSize: 6 });
-            const kp = (wiki && wiki.point) || matched.items[0];
-
-            if (kp) {
-                document.getElementById('wikiTitle').textContent = kp.name + ' · 知识点百科';
-                document.getElementById('wikiContent').textContent = wiki ? wiki.content : kp.desc;
-                document.getElementById('wikiMeta').textContent = `${kp.grade} · ${kp.subject} · 难度${kp.difficulty} · ` +
-                    `<a href="knowledge-detail.html?id=${kp.id}" style="color:var(--primary);">查看详情</a>`;
-                const examSection = document.getElementById('examTypesSection');
-                const examResult = document.getElementById('examTypesResult');
-                if (kp.examTypes && kp.examTypes.length) {
-                    examSection.style.display = 'block';
-                    examResult.innerHTML = kp.examTypes.map(function (e, i) {
-                        return `<div class="photo-result-card" style="margin-bottom:10px;background:linear-gradient(135deg,#f0f4ff,#e8eeff);border-color:rgba(79,70,229,0.2);">
-                            <h4 style="color:var(--primary);font-size:14px;margin-bottom:6px;">题型 ${i + 1} · ${e.type}</h4>
-                            <p style="font-size:13px;margin-bottom:4px;"><strong>${e.title}</strong></p>
-                            <p style="font-size:13px;color:var(--text-muted);">${e.stem}</p>
-                        </div>`;
-                    }).join('');
-                } else {
-                    examSection.style.display = 'none';
-                }
-            } else {
-                document.getElementById('wikiTitle').textContent = '未找到精确匹配';
-                document.getElementById('wikiContent').textContent = '请尝试输入年级、学科或具体知识点名称，如「初二数学」「光合作用」「牛顿定律」。';
-                document.getElementById('wikiMeta').textContent = '';
-                document.getElementById('examTypesSection').style.display = 'none';
-            }
-
-            document.getElementById('matchedKpList').innerHTML = matched.items.length ? matched.items.map(function (k) {
-                return `<a href="knowledge-detail.html?id=${k.id}" class="card" style="display:block;">
-                    <div class="card-title">${k.name}</div>
-                    <div class="card-subtitle">${k.grade} · ${k.subject}</div>
-                    <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
-                        ${k.examTypes.map(e => `<span class="tag tag-primary">${e.type}</span>`).join('')}
-                    </div>
-                </a>`;
-            }).join('') : '<p style="color:var(--text-muted);font-size:14px;">暂无更多匹配知识点</p>';
-
-            document.getElementById('relatedList').innerHTML = mockRelated.map(r =>
-                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
-            ).join('');
-            const suggests = kp && kp.next && kp.next.length ? kp.next.slice(0, 4)
-                : matched.items.slice(0, 4).map(k => k.name);
-            document.getElementById('suggestList').innerHTML = suggests.map(s =>
-                `<span class="tag tag-primary" style="cursor:pointer;" onclick="document.getElementById('queryInput').value='${s.replace(/'/g, '')}';document.getElementById('btnSearch').click();">${s}</span>`
-            ).join('');
-        }
-        const photoInput = document.getElementById('photoInput');
-        const photoAction = document.getElementById('photoAction');
-        const photoPreviewWrap = document.getElementById('photoPreviewWrap');
-        const photoPreview = document.getElementById('photoPreview');
-        const photoFileName = document.getElementById('photoFileName');
-        const btnReuploadPhoto = document.getElementById('btnReuploadPhoto');
-        const btnAnalyzePhoto = document.getElementById('btnAnalyzePhoto');
-        let selectedPhotoFile = null;
-        let photoObjectUrl = '';
-
-        function clearPhotoObjectUrl() {
-            if (photoObjectUrl) {
-                URL.revokeObjectURL(photoObjectUrl);
-                photoObjectUrl = '';
-            }
-        }
-
-        function openPhotoPicker() {
-            photoInput.click();
-        }
-
-        function handlePhotoSelected(file) {
-            if (!file) return;
-            if (!file.type.startsWith('image/')) {
-                showNotification('请选择图片文件（jpg、png、webp 等）', 'warning');
-                return;
-            }
-            if (file.size > 10 * 1024 * 1024) {
-                showNotification('图片大小不能超过 10MB', 'warning');
-                return;
-            }
-            clearPhotoObjectUrl();
-            selectedPhotoFile = file;
-            photoObjectUrl = URL.createObjectURL(file);
-            photoPreview.src = photoObjectUrl;
-            photoFileName.textContent = file.name + ' · ' + (file.size / 1024).toFixed(1) + ' KB';
-            photoPreviewWrap.classList.add('show');
-            showNotification('图片已上传，可点击「开始识别解析」', 'success');
-        }
-
-        photoAction.addEventListener('click', openPhotoPicker);
-        btnReuploadPhoto.addEventListener('click', openPhotoPicker);
-        photoInput.addEventListener('change', function () {
-            handlePhotoSelected(this.files && this.files[0]);
-            this.value = '';
-        });
-
-        function renderPhotoAnalysis(fileName) {
-            document.getElementById('wikiTitle').textContent = '相关知识点 · 力学与几何';
-            document.getElementById('wikiContent').textContent = '根据题目图片识别，本题涉及勾股定理与力的分解，建议结合相关微课与 AR 实验巩固。';
-            document.getElementById('photoOcrText').textContent = '识别题目（模拟）：已知直角三角形两直角边分别为 3 cm 和 4 cm，求斜边长度；并判断 5 N 的力沿 37° 分解后的水平分量。';
-            document.getElementById('photoAnswerSteps').innerHTML = `
-                <strong>解题步骤：</strong>
-                <ol>
-                    <li>勾股定理：斜边 c = √(3² + 4²) = √25 = 5 cm</li>
-                    <li>力的分解：水平分量 F<sub>x</sub> = F·cos37° ≈ 5 × 0.8 = 4 N</li>
-                    <li>检验：结果符合直角三角形 3-4-5 模型及三角函数分解规律</li>
-                </ol>
-                <p style="margin-top:10px;font-size:13px;color:var(--text-muted);">图片来源：${fileName} · 测试账户「学海启航」演示解析</p>`;
-            document.getElementById('photoResultBlock').style.display = 'block';
-            document.getElementById('examTypesSection').style.display = 'none';
-            document.getElementById('relatedList').innerHTML = mockRelated.slice(0, 3).map(r =>
-                `<a href="resource-detail.html?id=${r.id}" class="resource-card"><img class="cover" src="${r.cover}" alt="" onerror="this.src='img/0006.jpg'"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.type}</div></div></a>`
-            ).join('');
-            document.getElementById('suggestList').innerHTML = ['勾股定理应用', '力的分解', '相似题目练习'].map(s =>
-                `<span class="tag tag-primary" style="cursor:pointer;">${s}</span>`
-            ).join('');
-        }
-
-        btnAnalyzePhoto.addEventListener('click', function () {
-            if (!selectedPhotoFile) {
-                showNotification('请先上传题目图片', 'warning');
-                return;
-            }
-            document.getElementById('emptyHint').style.display = 'none';
-            document.getElementById('searchResults').style.display = 'block';
-            document.getElementById('photoResultBlock').style.display = 'none';
-            document.getElementById('photoAnalyzing').classList.add('show');
-            btnAnalyzePhoto.disabled = true;
-            btnAnalyzePhoto.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 识别中…';
-            setTimeout(function () {
-                document.getElementById('photoAnalyzing').classList.remove('show');
-                renderPhotoAnalysis(selectedPhotoFile.name);
-                btnAnalyzePhoto.disabled = false;
-                btnAnalyzePhoto.textContent = '开始识别解析';
-                showNotification('题目识别完成，已生成解析', 'success');
-                document.getElementById('searchResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 1200);
-        });
-
-        document.getElementById('btnSearch').onclick = function() {
-            const q = document.getElementById('queryInput').value.trim();
-            if (!q) { showNotification('请输入搜索关键词', 'warning'); return; }
-            document.getElementById('emptyHint').style.display = 'none';
-            document.getElementById('searchResults').style.display = 'block';
-            renderTextSearchResults(q);
-        };
     </script>
 </body>
 </html>

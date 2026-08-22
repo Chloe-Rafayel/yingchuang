@@ -191,6 +191,10 @@
         let list = generateAll();
         if (subject) list = list.filter(function (k) { return k.subject === subject; });
         if (grade) list = list.filter(function (k) { return k.grade === grade; });
+        if (options.gradesInScope && options.gradesInScope.length) {
+            const scope = options.gradesInScope;
+            list = list.filter(function (k) { return scope.indexOf(k.grade) >= 0; });
+        }
         if (difficulty) list = list.filter(function (k) { return k.difficulty === difficulty; });
         if (q) {
             list = list.filter(function (k) {
@@ -211,14 +215,17 @@
         };
     }
 
-    function searchWiki(query) {
+    function searchWiki(query, options) {
+        options = options || {};
         const q = (query || '').trim();
         if (!q) return null;
         const map = buildWikiMap();
         const keys = Object.keys(map);
         const exact = keys.find(function (k) { return k === q || k.indexOf(q) >= 0 || q.indexOf(k) >= 0; });
         if (exact) return { key: exact, content: map[exact] };
-        const result = searchKnowledgePoints({ q: q, pageSize: 1 });
+        const searchOpts = { q: q, pageSize: 1 };
+        if (options.gradesInScope) searchOpts.gradesInScope = options.gradesInScope;
+        const result = searchKnowledgePoints(searchOpts);
         if (result.items.length) {
             const kp = result.items[0];
             return { key: kp.name, content: map[kp.name] || kp.desc, point: kp };
