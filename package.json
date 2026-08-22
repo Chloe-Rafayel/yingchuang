@@ -1,0 +1,11 @@
+{
+  "name": "yingchuang-edu-platform",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev . --port 3000",
+    "deploy": "wrangler pages deploy ."
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}
